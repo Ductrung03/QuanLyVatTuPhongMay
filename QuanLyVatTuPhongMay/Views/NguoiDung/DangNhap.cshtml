@@ -1,0 +1,111 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - Quản lý vật tư phòng thí nghiệm</title>
+    <link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/vendors/icofont.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/vendors/themify.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/vendors/flag-icon.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/vendors/feather-icon.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/vendors/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
+    <link id="color" rel="stylesheet" href="~/assets/css/color-1.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/responsive.css">
+</head>
+<body>
+    <div class="loader-wrapper">
+        <div class="loader-index"><span></span></div>
+        <svg>
+            <defs></defs>
+            <filter id="goo">
+                <fegaussianblur in="SourceGraphic" stddeviation="11" result="blur"></fegaussianblur>
+                <fecolormatrix in="blur" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo"></fecolormatrix>
+            </filter>
+        </svg>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-7"><img class="bg-img-cover bg-center" src="~/assets/images/login/2.jpg" alt="looginpage"></div>
+            <div class="col-xl-5 p-0">
+                <div class="login-card">
+                    <div>
+                        <div><a class="logo" href="#"><img class="img-fluid for-light" src="~/assets/images/logo/login.png" alt="looginpage"><img class="img-fluid for-dark" src="~/assets/images/logo/logo_dark.png" alt="looginpage"></a></div>
+                        <div class="login-main">
+                            <form class="theme-form" asp-action="DangNhap" method="post">
+                                <h4>Đăng nhập vào hệ thống</h4>
+                                <p>Nhập tên đăng nhập và mật khẩu để tiếp tục</p>
+
+                                @if (TempData["ErrorMessage"] != null)
+                                {
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        @TempData["ErrorMessage"]
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                }
+
+                                @if (TempData["SuccessMessage"] != null)
+                                {
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        @TempData["SuccessMessage"]
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                }
+
+                                <div class="form-group">
+                                    <label class="col-form-label">Tên đăng nhập</label>
+                                    <input class="form-control" type="text" name="tenDangNhap" required placeholder="Nhập tên đăng nhập">
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">Mật khẩu</label>
+                                    <div class="form-input position-relative">
+                                        <input class="form-control" type="password" name="matKhau" required placeholder="*********">
+                                        <div class="show-hide"><span class="show"></span></div>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <div class="checkbox p-0">
+                                        <input id="checkbox1" type="checkbox">
+                                        <label class="text-muted" for="checkbox1">Nhớ mật khẩu</label>
+                                    </div>
+                                    <button class="btn btn-primary btn-block w-100" type="submit">Đăng nhập</button>
+                                </div>
+                                <div class="login-social-title">
+                                    <h6>Hoặc đăng nhập với</h6>
+                                </div>
+                                <div class="form-group">
+                                    <ul class="login-social">
+                                        <li><a href="#" target="_blank"><i data-feather="linkedin"></i></a></li>
+                                        <li><a href="#" target="_blank"><i data-feather="twitter"></i></a></li>
+                                        <li><a href="#" target="_blank"><i data-feather="facebook"></i></a></li>
+                                        <li><a href="#" target="_blank"><i data-feather="instagram"></i></a></li>
+                                    </ul>
+                                </div>
+                                <p class="mt-4 mb-0 text-center">Chưa có tài khoản?<a class="ms-2" href="#" onclick="alert('Liên hệ quản trị viên để tạo tài khoản')">Liên hệ Admin</a></p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/assets/js/jquery-3.5.1.min.js"></script>
+    <script src="~/assets/js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/icons/feather-icon/feather.min.js"></script>
+    <script src="~/assets/js/icons/feather-icon/feather-icon.js"></script>
+    <script src="~/assets/js/scrollbar/simplebar.js"></script>
+    <script src="~/assets/js/scrollbar/custom.js"></script>
+    <script src="~/assets/js/config.js"></script>
+    <script src="~/assets/js/script.js"></script>
+</body>
+</html>

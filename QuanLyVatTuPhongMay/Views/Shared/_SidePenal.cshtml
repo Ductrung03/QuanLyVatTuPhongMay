@@ -1,41 +1,190 @@
 ﻿<div class="sidebar-wrapper" sidebar-layout="stroke-svg">
     <div>
         <div class="logo-wrapper">
-            <a asp-controller="SamplePage" asp-action="Page1"><img class="img-fluid for-light" src="~/assets/images/logo/logo.png" alt=""><img class="img-fluid for-dark" src="~/assets/images/logo/logo_dark.png" alt=""></a>
+            <a asp-controller="Home" asp-action="Index"><img class="img-fluid for-light" src="~/assets/images/logo/logo.png" alt=""><img class="img-fluid for-dark" src="~/assets/images/logo/logo_dark.png" alt=""></a>
             <div class="back-btn"><i class="fa fa-angle-left"></i></div>
             <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle" data-feather="grid"> </i></div>
         </div>
-        <div class="logo-icon-wrapper"><a asp-controller="SamplePage" asp-action="Page1"><img class="img-fluid" src="~/assets/images/logo/logo-icon.png" alt=""></a></div>
+        <div class="logo-icon-wrapper"><a asp-controller="Home" asp-action="Index"><img class="img-fluid" src="~/assets/images/logo/logo-icon.png" alt=""></a></div>
         <nav class="sidebar-main">
             <div class="left-arrow" id="left-arrow"><i data-feather="arrow-left"></i></div>
             <div id="sidebar-menu">
                 <ul class="sidebar-links" id="simple-bar">
                     <li class="sidebar-main-title">
                         <div>
-                            <h6 class="lan-8">Applications</h6>
+                            <h6>Trang chủ</h6>
+                        </div>
+                    </li>
+                    <li class="sidebar-list">
+                        <a class="sidebar-link sidebar-title" asp-controller="Home" asp-action="Index">
+                            <svg class="stroke-icon">
+                                <use href="~/assets/svg/icon-sprite.svg#stroke-home"></use>
+                            </svg>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-main-title">
+                        <div>
+                            <h6>Quản lý cơ bản</h6>
                         </div>
                     </li>
                     <li class="sidebar-list">
                         <a class="sidebar-link sidebar-title">
                             <svg class="stroke-icon">
-                                <use href="~/assets/svg/icon-sprite.svg"></use>
+                                <use href="~/assets/svg/icon-sprite.svg#stroke-user"></use>
                             </svg>
-                            <svg class="fill-icon">
-                                <use href="~/assets/svg/icon-sprite.svg"></use>
-                            </svg><span>Sample Pages</span>
+                            <span>Quản lý người dùng</span>
                         </a>
                         <ul class="sidebar-submenu">
-                            <li><a asp-controller="SamplePage" asp-action="Page1">Page 1</a></li>
-                            <li><a asp-controller="SamplePage" asp-action="Page2">Page 2</a></li>
+                            <li><a asp-controller="NguoiDung" asp-action="Index">Danh sách người dùng</a></li>
+                            <li><a asp-controller="NguoiDung" asp-action="Create">Thêm người dùng</a></li>
+                            <li><a asp-controller="NguoiDung" asp-action="LichSuDangNhap">Lịch sử đăng nhập</a></li>
                         </ul>
                     </li>
                     <li class="sidebar-list">
-                        <a class="sidebar-link sidebar-title" href="#" target="_blank">
+                        <a class="sidebar-link sidebar-title">
                             <svg class="stroke-icon">
-                                <use href="~/assets/svg/icon-sprite.svg"></use>
+                                <use href="~/assets/svg/icon-sprite.svg#stroke-user"></use>
                             </svg>
-                            <span>Documentation</span>
+                            <span>Quản lý nhân viên</span>
                         </a>
+                        <ul class="sidebar-submenu">
+                            <li><a asp-controller="NhanVien" asp-action="Index">Danh sách nhân viên</a></li>
+                            <li><a asp-controller="NhanVien" asp-action="Create">Thêm nhân viên</a></li>
+                        </ul>
+                    </li>
+                    <li class="sidebar-list">
+                        <a class="sidebar-link sidebar-title">
+                            <svg class="stroke-icon">
+                                <use href="~/assets/svg/icon-sprite.svg#stroke-layout"></use>
+                            </svg>
+                            <span>Quản lý phòng máy</span>
+                        </a>
+                        <ul class="sidebar-submenu">
+                            <li><a asp-controller="PhongMay" asp-action="Index">Danh sách phòng máy</a></li>
+                            <li><a asp-controller="PhongMay" asp-action="Create">Thêm phòng máy</a></li>
+                            <li><a asp-controller="PhongMay" asp-action="BaoCaoSuDung">Báo cáo sử dụng</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="sidebar-main-title">
+                        <div>
+                            <h6>Quản lý thiết bị</h6>
+                        </div>
+                    </li>
+                    <li class="sidebar-list">
+                        <a class="sidebar-link sidebar-title">
+                            <svg class="stroke-icon">
+                                <use href="~/assets/svg/icon-sprite.svg#stroke-layout"></use>
+                            </svg>
+                            <span>Loại thiết bị</span>
+                        </a>
+                        <ul class="sidebar-submenu">
+                            <li><a asp-controller="Loai" asp-action="Index">Danh sách loại</a></li>
+                            <li><a asp-controller="Loai" asp-action="Create">Thêm loại</a></li>
+                        </ul>
+                    </li>
+                    <li class="sidebar-list">
+                        <a class="sidebar-link sidebar-title">
+                            <svg class="stroke-icon">
+                                <use href="~/assets/svg/icon-sprite.svg#stroke-layout"></use>
+                            </svg>
+                            <span>Thương hiệu</span>
+                        </a>
+                        <ul class="sidebar-submenu">
+                            <li><a asp-controller="ThuongHieu" asp-action="Index">Danh sách thương hiệu</a></li>
+                            <li><a asp-controller="ThuongHieu" asp-action="Create">Thêm thương hiệu</a></li>
+                        </ul>
+                    </li>
+                    <li class="sidebar-list">
+                        <a class="sidebar-link sidebar-title">
+                            <svg class="stroke-icon">
+                                <use href="~/assets/svg/icon-sprite.svg#stroke-layout"></use>
+                            </svg>
+                            <span>Thiết bị</span>
+                        </a>
+                        <ul class="sidebar-submenu">
+                            <li><a asp-controller="TrangTB" asp-action="Index">Danh sách thiết bị</a></li>
+                            <li><a asp-controller="TrangTB" asp-action="Create">Thêm thiết bị</a></li>
+                            <li><a asp-controller="TrangTB" asp-action="TimKiem">Tìm kiếm nâng cao</a></li>
+                            <li><a asp-controller="TrangTB" asp-action="CanBaoTri">Thiết bị cần bảo trì</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="sidebar-main-title">
+                        <div>
+                            <h6>Quản lý lịch</h6>
+                        </div>
+                    </li>
+                    <li class="sidebar-list">
+                        <a class="sidebar-link sidebar-title">
+                            <svg class="stroke-icon">
+                                <use href="~/assets/svg/icon-sprite.svg#stroke-calendar"></use>
+                            </svg>
+                            <span>Lịch thực hành</span>
+                        </a>
+                        <ul class="sidebar-submenu">
+                            <li><a asp-controller="LichThucHanh" asp-action="Index">Danh sách lịch</a></li>
+                            <li><a asp-controller="LichThucHanh" asp-action="Create">Tạo lịch mới</a></li>
+                            <li><a asp-controller="LichThucHanh" asp-action="DatLich">Đặt lịch</a></li>
+                            <li><a asp-controller="LichThucHanh" asp-action="LichHomNay">Lịch hôm nay</a></li>
+                        </ul>
+                    </li>
+                    <li class="sidebar-list">
+                        <a class="sidebar-link sidebar-title">
+                            <svg class="stroke-icon">
+                                <use href="~/assets/svg/icon-sprite.svg#stroke-calendar"></use>
+                            </svg>
+                            <span>Lịch trực</span>
+                        </a>
+                        <ul class="sidebar-submenu">
+                            <li><a asp-controller="LichTruc" asp-action="Index">Danh sách lịch trực</a></li>
+                            <li><a asp-controller="LichTruc" asp-action="Create">Tạo lịch trực</a></li>
+                            <li><a asp-controller="LichTruc" asp-action="LichTrucHomNay">Lịch trực hôm nay</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="sidebar-main-title">
+                        <div>
+                            <h6>Báo cáo & Thống kê</h6>
+                        </div>
+                    </li>
+                    <li class="sidebar-list">
+                        <a class="sidebar-link sidebar-title">
+                            <svg class="stroke-icon">
+                                <use href="~/assets/svg/icon-sprite.svg#stroke-chart"></use>
+                            </svg>
+                            <span>Báo cáo</span>
+                        </a>
+                        <ul class="sidebar-submenu">
+                            <li><a asp-controller="BaoCao" asp-action="Dashboard">Dashboard báo cáo</a></li>
+                            <li><a asp-controller="BaoCao" asp-action="TongHop">Báo cáo tổng hợp</a></li>
+                            <li><a asp-controller="BaoCao" asp-action="ThietBiTheoPhong">Thiết bị theo phòng</a></li>
+                            <li><a asp-controller="BaoCao" asp-action="ThietBiTheoThuongHieu">Thiết bị theo thương hiệu</a></li>
+                            <li><a asp-controller="BaoCao" asp-action="ThongKeTheoThang">Thống kê theo tháng</a></li>
+                            <li><a asp-controller="BaoCao" asp-action="SuDungPhongMay">Sử dụng phòng máy</a></li>
+                            <li><a asp-controller="BaoCao" asp-action="ThietBiCanBaoTri">Thiết bị cần bảo trì</a></li>
+                            <li><a asp-controller="BaoCao" asp-action="CanhBaoThietBi">Cảnh báo thiết bị</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="sidebar-main-title">
+                        <div>
+                            <h6>Tài khoản</h6>
+                        </div>
+                    </li>
+                    <li class="sidebar-list">
+                        <a class="sidebar-link sidebar-title">
+                            <svg class="stroke-icon">
+                                <use href="~/assets/svg/icon-sprite.svg#stroke-user"></use>
+                            </svg>
+                            <span>Tài khoản</span>
+                        </a>
+                        <ul class="sidebar-submenu">
+                            <li><a asp-controller="NguoiDung" asp-action="DoiMatKhau">Đổi mật khẩu</a></li>
+                            <li><a asp-controller="NguoiDung" asp-action="DangXuat">Đăng xuất</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>

@@ -1,0 +1,336 @@
+﻿@model IEnumerable<QuanLyVatTuPhongMay.Models.LichThucHanh>
+@{
+    ViewData["Title"] = "Danh sách lịch thực hành";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-body">
+    <div class="container-fluid">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-6">
+                    <h3>Lịch thực hành</h3>
+                </div>
+                <div class="col-6">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">
+                                <svg class="stroke-icon">
+                                    <use href="../assets/svg/icon-sprite.svg#stroke-home"></use>
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">Quản lý lịch</li>
+                        <li class="breadcrumb-item active">Lịch thực hành</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container-fluid starts-->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header card-no-border">
+                        <div class="header-top">
+                            <h5>Quản lý lịch thực hành</h5>
+                            <div class="card-header-right-icon">
+                                <a asp-action="Create" class="btn btn-primary">
+                                    <i class="fa fa-plus"></i> Tạo lịch mới
+                                </a>
+                                <a asp-action="DatLich" class="btn btn-success ms-2">
+                                    <i class="fa fa-calendar-plus"></i> Đặt lịch
+                                </a>
+                                <a asp-action="LichHomNay" class="btn btn-info ms-2">
+                                    <i class="fa fa-calendar-day"></i> Lịch hôm nay
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <!-- Filter -->
+                        <form method="get" class="row mb-4">
+                            <div class="col-md-3">
+                                <label class="form-label">Trạng thái</label>
+                                <select class="form-select" name="trangThai">
+                                    @if (ViewBag.TrangThais != null)
+                                    {
+                                        @foreach (var item in (SelectList)ViewBag.TrangThais)
+                                        {
+                                            <option value="@item.Value" selected="@(item.Selected)">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Từ ngày</label>
+                                <input type="date" class="form-control" name="tuNgay" value="@ViewBag.TuNgay">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Đến ngày</label>
+                                <input type="date" class="form-control" name="denNgay" value="@ViewBag.DenNgay">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">&nbsp;</label>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-filter"></i> Lọc
+                                </button>
+                            </div>
+                        </form>
+
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                @TempData["SuccessMessage"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        }
+
+                        @if (TempData["ErrorMessage"] != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                @TempData["ErrorMessage"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        }
+
+                        <!-- Calendar View (Mini) -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6>Lịch tháng này</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="calendar-mini" class="calendar-widget"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Data Table -->
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Mã lịch</th>
+                                        <th>Người đặt</th>
+                                        <th>Thời gian bắt đầu</th>
+                                        <th>Thời gian kết thúc</th>
+                                        <th>Thời lượng</th>
+                                        <th>Trạng thái</th>
+                                        <th>Tình trạng</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.Any())
+                                    {
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td><strong>LTH-@item.MaLich.ToString("D4")</strong></td>
+                                                <td>@(item.NguoiDung?.TenDangNhap ?? "Không xác định")</td>
+                                                <td>@item.ThoiGianBD.ToString("dd/MM/yyyy HH:mm")</td>
+                                                <td>@item.ThoiGianKT.ToString("dd/MM/yyyy HH:mm")</td>
+                                                <td>@item.ThoiGianSuDung phút</td>
+                                                <td>
+                                                    @{
+                                                        var statusBadge = "badge-light-primary";
+                                                        switch (item.TrangThai)
+                                                        {
+                                                            case "Đã đặt":
+                                                                statusBadge = "badge-light-info";
+                                                                break;
+                                                            case "Đang thực hiện":
+                                                                statusBadge = "badge-light-warning";
+                                                                break;
+                                                            case "Hoàn thành":
+                                                                statusBadge = "badge-light-success";
+                                                                break;
+                                                            case "Đã hủy":
+                                                                statusBadge = "badge-light-danger";
+                                                                break;
+                                                        }
+                                                    }
+                                                    <span class="badge @statusBadge">@item.TrangThai</span>
+                                                </td>
+                                                <td>
+                                                    @{
+                                                        var currentStatusBadge = "badge-light-secondary";
+                                                        var statusText = item.TrangThaiChiTiet;
+                                                        switch (statusText)
+                                                        {
+                                                            case "Chưa bắt đầu":
+                                                                currentStatusBadge = "badge-light-info";
+                                                                break;
+                                                            case "Đang thực hiện":
+                                                                currentStatusBadge = "badge-light-warning";
+                                                                break;
+                                                            case "Đã kết thúc":
+                                                                currentStatusBadge = "badge-light-success";
+                                                                break;
+                                                            case "Đã hủy":
+                                                                currentStatusBadge = "badge-light-danger";
+                                                                break;
+                                                        }
+                                                    }
+                                                    <span class="badge @currentStatusBadge">@statusText</span>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
+                                                        <a asp-action="Details" asp-route-id="@item.MaLich" class="btn btn-info btn-sm" title="Chi tiết">
+                                                            <i class="fa fa-eye"></i>
+                                                        </a>
+                                                        @if (item.TrangThai != "Đã hủy" && item.TrangThai != "Hoàn thành")
+                                                        {
+                                                            <a asp-action="Edit" asp-route-id="@item.MaLich" class="btn btn-warning btn-sm" title="Sửa">
+                                                                <i class="fa fa-edit"></i>
+                                                            </a>
+                                                            <div class="btn-group" role="group">
+                                                                <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" title="Cập nhật trạng thái">
+                                                                    <i class="fa fa-cog"></i>
+                                                                </button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li><a class="dropdown-item" href="#" onclick="updateStatus(@item.MaLich, 'Đã đặt')">Đã đặt</a></li>
+                                                                    <li><a class="dropdown-item" href="#" onclick="updateStatus(@item.MaLich, 'Đang thực hiện')">Đang thực hiện</a></li>
+                                                                    <li><a class="dropdown-item" href="#" onclick="updateStatus(@item.MaLich, 'Hoàn thành')">Hoàn thành</a></li>
+                                                                    <li><hr class="dropdown-divider"></li>
+                                                                    <li><a class="dropdown-item text-danger" href="#" onclick="cancelSchedule(@item.MaLich)">Hủy lịch</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        }
+                                                        <button type="button" class="btn btn-danger btn-sm" title="Xóa" onclick="confirmDelete(@item.MaLich)">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="8" class="text-center">
+                                                <div class="empty-state py-5">
+                                                    <i class="fa fa-calendar fa-3x text-muted mb-3"></i>
+                                                    <h5>Chưa có lịch thực hành nào</h5>
+                                                    <p class="text-muted">
+                                                        Hãy <a asp-action="Create">tạo lịch mới</a> hoặc
+                                                        <a asp-action="DatLich">đặt lịch thực hành</a>
+                                                    </p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Container-fluid Ends-->
+</div>
+
+@section Script {
+    <script>
+        function updateStatus(id, status) {
+            if (confirm('Bạn có chắc chắn muốn cập nhật trạng thái thành "' + status + '"?')) {
+                $.post('@Url.Action("CapNhatTrangThai", "LichThucHanh")', {
+                    id: id,
+                    trangThai: status
+                }, function(response) {
+                    if (response.success) {
+                        toastr.success(response.message);
+                        location.reload();
+                    } else {
+                        toastr.error(response.message);
+                    }
+                }).fail(function() {
+                    toastr.error('Có lỗi xảy ra khi cập nhật trạng thái');
+                });
+            }
+        }
+
+        function cancelSchedule(id) {
+            if (confirm('Bạn có chắc chắn muốn hủy lịch này?')) {
+                $.post('@Url.Action("HuyLich", "LichThucHanh")', {
+                    id: id,
+                    maNguoiDung: 1 // Cần lấy từ session thực tế
+                }, function(response) {
+                    if (response.success) {
+                        toastr.success(response.message);
+                        location.reload();
+                    } else {
+                        toastr.error(response.message);
+                    }
+                }).fail(function() {
+                    toastr.error('Có lỗi xảy ra khi hủy lịch');
+                });
+            }
+        }
+
+        function confirmDelete(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa lịch này? Hành động này không thể hoàn tác.')) {
+                $.post('@Url.Action("Delete", "LichThucHanh")/' + id, {
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                }, function(response) {
+                    location.reload();
+                }).fail(function() {
+                    alert('Có lỗi xảy ra khi xóa lịch');
+                });
+            }
+        }
+
+        // Initialize calendar mini
+        $(document).ready(function() {
+            // Simple calendar display
+            var today = new Date();
+            var currentMonth = today.getMonth();
+            var currentYear = today.getFullYear();
+
+            displayCalendar(currentMonth, currentYear);
+
+            function displayCalendar(month, year) {
+                var firstDay = new Date(year, month, 1).getDay();
+                var daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                var monthNames = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+                    "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
+
+                var calendarHtml = '<div class="text-center mb-3"><h6>' + monthNames[month] + ' ' + year + '</h6></div>';
+                calendarHtml += '<div class="row text-center"><div class="col">CN</div><div class="col">T2</div><div class="col">T3</div><div class="col">T4</div><div class="col">T5</div><div class="col">T6</div><div class="col">T7</div></div>';
+
+                // Add calendar days here (simplified)
+                var dayCount = 1;
+                for (var week = 0; week < 6; week++) {
+                    calendarHtml += '<div class="row text-center">';
+                    for (var day = 0; day < 7; day++) {
+                        if (week === 0 && day < firstDay) {
+                            calendarHtml += '<div class="col p-1"></div>';
+                        } else if (dayCount > daysInMonth) {
+                            calendarHtml += '<div class="col p-1"></div>';
+                        } else {
+                            var isToday = dayCount === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+                            var dayClass = isToday ? 'bg-primary text-white rounded' : '';
+                            calendarHtml += '<div class="col p-1"><span class="' + dayClass + '">' + dayCount + '</span></div>';
+                            dayCount++;
+                        }
+                    }
+                    calendarHtml += '</div>';
+                    if (dayCount > daysInMonth) break;
+                }
+
+                $('#calendar-mini').html(calendarHtml);
+            }
+
+            // Initialize tooltips
+            $('[title]').tooltip();
+        });
+    </script>
+}

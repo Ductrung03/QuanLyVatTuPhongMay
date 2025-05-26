@@ -1,0 +1,315 @@
+﻿@model IEnumerable<QuanLyVatTuPhongMay.Models.TrangTB>
+@{
+    ViewData["Title"] = "Danh sách thiết bị";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-body">
+    <div class="container-fluid">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-6">
+                    <h3>Danh sách thiết bị</h3>
+                </div>
+                <div class="col-6">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">
+                                <svg class="stroke-icon">
+                                    <use href="../assets/svg/icon-sprite.svg#stroke-home"></use>
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">Quản lý thiết bị</li>
+                        <li class="breadcrumb-item active">Danh sách thiết bị</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container-fluid starts-->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header card-no-border">
+                        <div class="header-top">
+                            <h5>Quản lý thiết bị</h5>
+                            <div class="card-header-right-icon">
+                                <a asp-action="Create" class="btn btn-primary">
+                                    <i class="fa fa-plus"></i> Thêm thiết bị mới
+                                </a>
+                                <a asp-action="TimKiem" class="btn btn-info ms-2">
+                                    <i class="fa fa-search"></i> Tìm kiếm nâng cao
+                                </a>
+                                <a asp-action="CanBaoTri" class="btn btn-warning ms-2">
+                                    <i class="fa fa-wrench"></i> Cần bảo trì
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter -->
+                    <div class="card-body">
+                        <form method="get" class="row mb-3">
+                            <div class="col-md-3">
+                                <label class="form-label">Tìm kiếm</label>
+                                <input type="text" class="form-control" name="search" value="@ViewBag.Search" placeholder="Tìm theo tên thiết bị...">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Phòng máy</label>
+                                <select class="form-select" name="phongMayId">
+                                    <option value="">Tất cả</option>
+                                    @if (ViewBag.PhongMays != null)
+                                    {
+                                        @foreach (var item in (SelectList)ViewBag.PhongMays)
+                                        {
+                                            <option value="@item.Value" selected="@(item.Selected)">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Loại thiết bị</label>
+                                <select class="form-select" name="loaiId">
+                                    <option value="">Tất cả</option>
+                                    @if (ViewBag.Loais != null)
+                                    {
+                                        @foreach (var item in (SelectList)ViewBag.Loais)
+                                        {
+                                            <option value="@item.Value" selected="@(item.Selected)">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Thương hiệu</label>
+                                <select class="form-select" name="thuongHieuId">
+                                    <option value="">Tất cả</option>
+                                    @if (ViewBag.ThuongHieus != null)
+                                    {
+                                        @foreach (var item in (SelectList)ViewBag.ThuongHieus)
+                                        {
+                                            <option value="@item.Value" selected="@(item.Selected)">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Tình trạng</label>
+                                <select class="form-select" name="tinhTrang">
+                                    <option value="">Tất cả</option>
+                                    @if (ViewBag.TinhTrangs != null)
+                                    {
+                                        @foreach (var item in (SelectList)ViewBag.TinhTrangs)
+                                        {
+                                            <option value="@item.Value" selected="@(item.Selected)">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-1">
+                                <label class="form-label">&nbsp;</label>
+                                <button type="submit" class="btn btn-primary w-100">Lọc</button>
+                            </div>
+                        </form>
+
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                @TempData["SuccessMessage"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        }
+
+                        @if (TempData["ErrorMessage"] != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                @TempData["ErrorMessage"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        }
+
+                        <!-- Data Table -->
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Mã TB</th>
+                                        <th>Loại thiết bị</th>
+                                        <th>Thương hiệu</th>
+                                        <th>Phòng máy</th>
+                                        <th>Giá tiền</th>
+                                        <th>Tình trạng</th>
+                                        <th>Ngày nhập</th>
+                                        <th>Số lần sửa</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.Any())
+                                    {
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td><strong>TB-@item.MaTTB.ToString("D4")</strong></td>
+                                                <td>@(item.Loai?.TenLoai ?? "Chưa xác định")</td>
+                                                <td>@(item.ThuongHieu?.TenThuongHieu ?? "Chưa xác định")</td>
+                                                <td>@(item.PhongMay?.TenPhongMay ?? "Chưa xác định")</td>
+                                                <td>@(item.GiaTien?.ToString("N0") ?? "0") VNĐ</td>
+                                                <td>
+                                                    @{
+                                                        var badgeClass = "badge-light-primary";
+                                                        if (item.TinhTrang?.Contains("hỏng") == true || item.TinhTrang?.Contains("Hỏng") == true)
+                                                            badgeClass = "badge-light-danger";
+                                                        else if (item.TinhTrang?.Contains("cần sửa") == true || item.TinhTrang?.Contains("Cần sửa") == true)
+                                                            badgeClass = "badge-light-warning";
+                                                        else if (item.TinhTrang?.Contains("Tốt") == true || item.TinhTrang?.Contains("Mới") == true)
+                                                            badgeClass = "badge-light-success";
+                                                    }
+                                                    <span class="badge @badgeClass">@(item.TinhTrang ?? "Không xác định")</span>
+                                                </td>
+                                                <td>@item.NgayNhap.ToString("dd/MM/yyyy")</td>
+                                                <td>
+                                                    @if (item.SoLanSua >= 5)
+                                                    {
+                                                        <span class="badge badge-light-danger">@item.SoLanSua</span>
+                                                    }
+                                                    else if (item.SoLanSua >= 3)
+                                                    {
+                                                        <span class="badge badge-light-warning">@item.SoLanSua</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-light-success">@item.SoLanSua</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
+                                                        <a asp-action="Details" asp-route-id="@item.MaTTB" class="btn btn-info btn-sm" title="Chi tiết">
+                                                            <i class="fa fa-eye"></i>
+                                                        </a>
+                                                        <a asp-action="Edit" asp-route-id="@item.MaTTB" class="btn btn-warning btn-sm" title="Sửa">
+                                                            <i class="fa fa-edit"></i>
+                                                        </a>
+                                                        <button type="button" class="btn btn-success btn-sm" title="Chuyển trạng thái"
+                                                                onclick="showStatusModal(@item.MaTTB, '@item.TinhTrang')">
+                                                            <i class="fa fa-exchange-alt"></i>
+                                                        </button>
+                                                        <button type="button" class="btn btn-danger btn-sm" title="Xóa"
+                                                                onclick="confirmDelete(@item.MaTTB)">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="9" class="text-center">
+                                                <div class="empty-state">
+                                                    <i class="fa fa-search fa-3x text-muted mb-3"></i>
+                                                    <h5>Không tìm thấy thiết bị nào</h5>
+                                                    <p class="text-muted">Thử thay đổi điều kiện tìm kiếm hoặc <a asp-action="Create">thêm thiết bị mới</a></p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Container-fluid Ends-->
+</div>
+
+<!-- Modal chuyển trạng thái -->
+<div class="modal fade" id="statusModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chuyển trạng thái thiết bị</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="statusForm">
+                    <input type="hidden" id="equipmentId" name="id">
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái hiện tại:</label>
+                        <span id="currentStatus" class="badge badge-light-info"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newStatus" class="form-label">Trạng thái mới</label>
+                        <select class="form-select" id="newStatus" name="tinhTrangMoi" required>
+                            <option value="">Chọn trạng thái</option>
+                            <option value="Mới">Mới</option>
+                            <option value="Tốt">Tốt</option>
+                            <option value="Bình thường">Bình thường</option>
+                            <option value="Cần sửa">Cần sửa</option>
+                            <option value="Hỏng">Hỏng</option>
+                            <option value="Đang sửa">Đang sửa</option>
+                            <option value="Ngưng sử dụng">Ngưng sử dụng</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="note" class="form-label">Ghi chú</label>
+                        <textarea class="form-control" id="note" name="ghiChu" rows="3" placeholder="Nhập ghi chú về việc thay đổi trạng thái..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" onclick="changeStatus()">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Script {
+    <script>
+        function showStatusModal(id, currentStatus) {
+            $('#equipmentId').val(id);
+            $('#currentStatus').text(currentStatus);
+            $('#statusModal').modal('show');
+        }
+
+        function changeStatus() {
+            var formData = $('#statusForm').serialize();
+
+            $.post('@Url.Action("ChuyenTrangThai", "TrangTB")', formData, function(response) {
+                if (response.success) {
+                    toastr.success(response.message);
+                    $('#statusModal').modal('hide');
+                    location.reload();
+                } else {
+                    toastr.error(response.message);
+                }
+            }).fail(function() {
+                toastr.error('Có lỗi xảy ra khi cập nhật trạng thái');
+            });
+        }
+
+        function confirmDelete(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa thiết bị này?')) {
+                $.post('@Url.Action("Delete", "TrangTB")/' + id, {
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                }, function(response) {
+                    location.reload();
+                }).fail(function() {
+                    alert('Có lỗi xảy ra khi xóa thiết bị');
+                });
+            }
+        }
+
+        // Initialize tooltips
+        $(document).ready(function() {
+            $('[title]').tooltip();
+        });
+    </script>
+}

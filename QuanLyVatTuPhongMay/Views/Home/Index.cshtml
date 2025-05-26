@@ -1,0 +1,325 @@
+﻿@{
+    ViewData["Title"] = "Dashboard - Quản lý vật tư phòng thí nghiệm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-body">
+    <div class="container-fluid">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-6">
+                    <h3>Dashboard</h3>
+                </div>
+                <div class="col-6">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">
+                                <svg class="stroke-icon">
+                                    <use href="../assets/svg/icon-sprite.svg#stroke-home"></use>
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active">Dashboard</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container-fluid starts-->
+    <div class="container-fluid">
+        <div class="row widget-grid">
+            <!-- Tổng quan thống kê -->
+            <div class="col-xxl-3 col-sm-6 box-col-6">
+                <div class="card widget-1">
+                    <div class="card-body">
+                        <div class="widget-content">
+                            <div class="widget-round primary">
+                                <div class="bg-round">
+                                    <svg class="svg-fill">
+                                        <use href="../assets/svg/icon-sprite.svg#tag"></use>
+                                    </svg>
+                                    <svg class="half-circle svg-fill">
+                                        <use href="../assets/svg/icon-sprite.svg#halfcircle"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div>
+                                <h4>@ViewBag.TongSoThietBi</h4>
+                                <span class="f-light">Tổng thiết bị</span>
+                            </div>
+                        </div>
+                        <div class="font-primary f-w-500">
+                            <i class="icon-arrow-up icon-rotate me-1"></i>
+                            <span>Thiết bị đang hoạt động</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xxl-3 col-sm-6 box-col-6">
+                <div class="card widget-1">
+                    <div class="card-body">
+                        <div class="widget-content">
+                            <div class="widget-round secondary">
+                                <div class="bg-round">
+                                    <svg class="svg-fill">
+                                        <use href="../assets/svg/icon-sprite.svg#layout"></use>
+                                    </svg>
+                                    <svg class="half-circle svg-fill">
+                                        <use href="../assets/svg/icon-sprite.svg#halfcircle"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div>
+                                <h4>@ViewBag.TongSoPhongMay</h4>
+                                <span class="f-light">Phòng máy</span>
+                            </div>
+                        </div>
+                        <div class="font-secondary f-w-500">
+                            <i class="icon-arrow-up icon-rotate me-1"></i>
+                            <span>Đang hoạt động</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xxl-3 col-sm-6 box-col-6">
+                <div class="card widget-1">
+                    <div class="card-body">
+                        <div class="widget-content">
+                            <div class="widget-round warning">
+                                <div class="bg-round">
+                                    <svg class="svg-fill">
+                                        <use href="../assets/svg/icon-sprite.svg#return-box"></use>
+                                    </svg>
+                                    <svg class="half-circle svg-fill">
+                                        <use href="../assets/svg/icon-sprite.svg#halfcircle"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div>
+                                <h4>@ViewBag.ThietBiCanBaoTri</h4>
+                                <span class="f-light">Cần bảo trì</span>
+                            </div>
+                        </div>
+                        <div class="font-warning f-w-500">
+                            <i class="icon-arrow-up icon-rotate me-1"></i>
+                            <span>Cần xử lý</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xxl-3 col-sm-6 box-col-6">
+                <div class="card widget-1">
+                    <div class="card-body">
+                        <div class="widget-content">
+                            <div class="widget-round success">
+                                <div class="bg-round">
+                                    <svg class="svg-fill">
+                                        <use href="../assets/svg/icon-sprite.svg#calendar"></use>
+                                    </svg>
+                                    <svg class="half-circle svg-fill">
+                                        <use href="../assets/svg/icon-sprite.svg#halfcircle"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div>
+                                <h4>@ViewBag.LichSapToi</h4>
+                                <span class="f-light">Lịch sắp tới</span>
+                            </div>
+                        </div>
+                        <div class="font-success f-w-500">
+                            <i class="icon-arrow-up icon-rotate me-1"></i>
+                            <span>7 ngày tới</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cảnh báo thiết bị -->
+            <div class="col-xxl-8 col-lg-12 box-col-12">
+                <div class="card">
+                    <div class="card-header card-no-border">
+                        <div class="header-top">
+                            <h5>Cảnh báo thiết bị</h5>
+                            <div class="card-header-right-icon">
+                                <a asp-controller="BaoCao" asp-action="CanhBaoThietBi" class="btn btn-primary btn-sm">
+                                    Xem tất cả
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body pt-0">
+                        <div class="table-responsive">
+                            <table class="table table-bordernone">
+                                <thead>
+                                    <tr>
+                                        <th>Loại cảnh báo</th>
+                                        <th>Thiết bị</th>
+                                        <th>Phòng</th>
+                                        <th>Tình trạng</th>
+                                        <th>Số lần sửa</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ViewBag.CanhBaoThietBi != null)
+                                    {
+                                        @foreach (var item in ViewBag.CanhBaoThietBi)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <span class="badge badge-light-warning">
+                                                        @(item.GetType().GetProperty("LoaiCanhBao")?.GetValue(item, null))
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    @(item.GetType().GetProperty("TenLoai")?.GetValue(item, null)) -
+                                                    @(item.GetType().GetProperty("TenThuongHieu")?.GetValue(item, null))
+                                                </td>
+                                                <td>@(item.GetType().GetProperty("TenPhongMay")?.GetValue(item, null))</td>
+                                                <td>
+                                                    <span class="badge badge-light-danger">
+                                                        @(item.GetType().GetProperty("TinhTrang")?.GetValue(item, null))
+                                                    </span>
+                                                </td>
+                                                <td>@(item.GetType().GetProperty("SoLanSua")?.GetValue(item, null))</td>
+                                                <td>
+                                                    <a asp-controller="TrangTB" asp-action="Details"
+                                                       asp-route-id="@(item.GetType().GetProperty("MaTTB")?.GetValue(item, null))"
+                                                       class="btn btn-primary btn-sm">
+                                                        Chi tiết
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="6" class="text-center">Không có cảnh báo nào</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thống kê nhanh -->
+            <div class="col-xxl-4 col-lg-12 box-col-12">
+                <div class="card">
+                    <div class="card-header card-no-border">
+                        <h5>Thống kê nhanh</h5>
+                    </div>
+                    <div class="card-body pt-0">
+                        <div class="activity-timeline">
+                            <div class="activity-item">
+                                <div class="activity-dot primary"></div>
+                                <div class="activity-content">
+                                    <h6>Thiết bị mới nhập</h6>
+                                    <span class="f-light">Hôm nay có 5 thiết bị mới được nhập</span>
+                                    <small class="text-muted">2 giờ trước</small>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot warning"></div>
+                                <div class="activity-content">
+                                    <h6>Thiết bị cần bảo trì</h6>
+                                    <span class="f-light">3 thiết bị cần được bảo trì định kỳ</span>
+                                    <small class="text-muted">5 giờ trước</small>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot success"></div>
+                                <div class="activity-content">
+                                    <h6>Lịch thực hành</h6>
+                                    <span class="f-light">Đã có 12 lịch thực hành được đặt hôm nay</span>
+                                    <small class="text-muted">1 ngày trước</small>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot secondary"></div>
+                                <div class="activity-content">
+                                    <h6>Báo cáo tuần</h6>
+                                    <span class="f-light">Báo cáo sử dụng thiết bị tuần này đã sẵn sàng</span>
+                                    <small class="text-muted">2 ngày trước</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Liên kết nhanh -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header card-no-border">
+                        <h5>Truy cập nhanh</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-2 col-sm-4 col-6 mb-3">
+                                <a asp-controller="TrangTB" asp-action="Create" class="btn btn-outline-primary w-100">
+                                    <i class="fa fa-plus mb-2"></i><br>
+                                    Thêm thiết bị
+                                </a>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6 mb-3">
+                                <a asp-controller="LichThucHanh" asp-action="DatLich" class="btn btn-outline-success w-100">
+                                    <i class="fa fa-calendar mb-2"></i><br>
+                                    Đặt lịch
+                                </a>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6 mb-3">
+                                <a asp-controller="BaoCao" asp-action="TongHop" class="btn btn-outline-info w-100">
+                                    <i class="fa fa-chart-bar mb-2"></i><br>
+                                    Báo cáo
+                                </a>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6 mb-3">
+                                <a asp-controller="TrangTB" asp-action="TimKiem" class="btn btn-outline-warning w-100">
+                                    <i class="fa fa-search mb-2"></i><br>
+                                    Tìm kiếm
+                                </a>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6 mb-3">
+                                <a asp-controller="TrangTB" asp-action="CanBaoTri" class="btn btn-outline-danger w-100">
+                                    <i class="fa fa-wrench mb-2"></i><br>
+                                    Bảo trì
+                                </a>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6 mb-3">
+                                <a asp-controller="NguoiDung" asp-action="Create" class="btn btn-outline-secondary w-100">
+                                    <i class="fa fa-user mb-2"></i><br>
+                                    Thêm user
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Container-fluid Ends-->
+</div>
+
+@section Script {
+    <script>
+        $(document).ready(function() {
+            // Load dashboard stats
+            loadDashboardStats();
+        });
+
+        function loadDashboardStats() {
+            $.get('@Url.Action("GetDashboardStats", "Home")', function(data) {
+                if (!data.error) {
+                    // Update stats if needed
+                }
+            });
+        }
+    </script>
+}
