@@ -1,4 +1,4 @@
-namespace Cuba_Staterkit.Models
+namespace QuanLyVatTuPhongMay.Models
 {
     public class ErrorViewModel
     {

@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QuanLyVatTuPhongMay.Models
 {
@@ -7,13 +7,17 @@ namespace QuanLyVatTuPhongMay.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Display(Name = "Mã thương hiệu")]
         public int MaThuongHieu { get; set; }
 
-        [Required]
-        [StringLength(50)]
+        [Required(ErrorMessage = "Tên thương hiệu không được để trống")]
+        [StringLength(50, ErrorMessage = "Tên thương hiệu không quá 50 ký tự")]
+        [Display(Name = "Tên thương hiệu")]
         public string TenThuongHieu { get; set; }
 
         // Navigation properties
-        public virtual ICollection<TrangTB> TrangTBs { get; set; }
+        [Display(Name = "Thiết bị")]
+        public virtual ICollection<TrangTB> TrangTBs { get; set; } = new List<TrangTB>();
     }
+
 }
