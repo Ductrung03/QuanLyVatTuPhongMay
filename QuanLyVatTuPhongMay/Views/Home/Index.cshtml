@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Dashboard - Quản lý vật tư phòng thí nghiệm";
+    ViewData["Title"] = "Dashboard - Hệ thống quản lý vật tư phòng thí nghiệm";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -13,11 +13,9 @@
                 <div class="col-6">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
-                            <a asp-controller="Home" asp-action="Index">
-                                <svg class="stroke-icon">
-                                    <use href="../assets/svg/icon-sprite.svg#stroke-home"></use>
-                                </svg>
-                            </a>
+                            <svg class="stroke-icon">
+                                <use href="../assets/svg/icon-sprite.svg#stroke-home"></use>
+                            </svg>
                         </li>
                         <li class="breadcrumb-item active">Dashboard</li>
                     </ol>
@@ -28,9 +26,33 @@
 
     <!-- Container-fluid starts-->
     <div class="container-fluid">
-        <div class="row widget-grid">
-            <!-- Tổng quan thống kê -->
-            <div class="col-xxl-3 col-sm-6 box-col-6">
+        <!-- Welcome Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card bg-primary">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <div class="text-white">
+                                    <h4>Chào mừng trở lại!</h4>
+                                    <p class="mb-0">Hệ thống quản lý vật tư phòng thí nghiệm - Tổng quan hoạt động hôm nay</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="text-white">
+                                    <h5 id="currentTime"></h5>
+                                    <p class="mb-0" id="currentDate"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thống kê tổng quan -->
+        <div class="row">
+            <div class="col-xl-3 col-lg-6 col-md-6">
                 <div class="card widget-1">
                     <div class="card-body">
                         <div class="widget-content">
@@ -39,264 +61,287 @@
                                     <svg class="svg-fill">
                                         <use href="../assets/svg/icon-sprite.svg#tag"></use>
                                     </svg>
-                                    <svg class="half-circle svg-fill">
-                                        <use href="../assets/svg/icon-sprite.svg#halfcircle"></use>
-                                    </svg>
                                 </div>
                             </div>
                             <div>
-                                <h4>@ViewBag.TongSoThietBi</h4>
+                                <h4 id="totalEquipment">-</h4>
                                 <span class="f-light">Tổng thiết bị</span>
+                                <div class="font-primary f-w-500">
+                                    <i class="icon-arrow-up"></i>
+                                    <span id="equipmentGrowth">+0%</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="font-primary f-w-500">
-                            <i class="icon-arrow-up icon-rotate me-1"></i>
-                            <span>Thiết bị đang hoạt động</span>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-xxl-3 col-sm-6 box-col-6">
+            <div class="col-xl-3 col-lg-6 col-md-6">
                 <div class="card widget-1">
                     <div class="card-body">
                         <div class="widget-content">
                             <div class="widget-round secondary">
                                 <div class="bg-round">
                                     <svg class="svg-fill">
-                                        <use href="../assets/svg/icon-sprite.svg#layout"></use>
-                                    </svg>
-                                    <svg class="half-circle svg-fill">
-                                        <use href="../assets/svg/icon-sprite.svg#halfcircle"></use>
+                                        <use href="../assets/svg/icon-sprite.svg#stroke-layout"></use>
                                     </svg>
                                 </div>
                             </div>
                             <div>
-                                <h4>@ViewBag.TongSoPhongMay</h4>
+                                <h4 id="totalRooms">-</h4>
                                 <span class="f-light">Phòng máy</span>
-                            </div>
-                        </div>
-                        <div class="font-secondary f-w-500">
-                            <i class="icon-arrow-up icon-rotate me-1"></i>
-                            <span>Đang hoạt động</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xxl-3 col-sm-6 box-col-6">
-                <div class="card widget-1">
-                    <div class="card-body">
-                        <div class="widget-content">
-                            <div class="widget-round warning">
-                                <div class="bg-round">
-                                    <svg class="svg-fill">
-                                        <use href="../assets/svg/icon-sprite.svg#return-box"></use>
-                                    </svg>
-                                    <svg class="half-circle svg-fill">
-                                        <use href="../assets/svg/icon-sprite.svg#halfcircle"></use>
-                                    </svg>
+                                <div class="font-secondary f-w-500">
+                                    <i class="icon-arrow-up"></i>
+                                    <span id="roomUtilization">0%</span> hiệu suất TB
                                 </div>
                             </div>
-                            <div>
-                                <h4>@ViewBag.ThietBiCanBaoTri</h4>
-                                <span class="f-light">Cần bảo trì</span>
-                            </div>
-                        </div>
-                        <div class="font-warning f-w-500">
-                            <i class="icon-arrow-up icon-rotate me-1"></i>
-                            <span>Cần xử lý</span>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-xxl-3 col-sm-6 box-col-6">
+            <div class="col-xl-3 col-lg-6 col-md-6">
                 <div class="card widget-1">
                     <div class="card-body">
                         <div class="widget-content">
                             <div class="widget-round success">
                                 <div class="bg-round">
                                     <svg class="svg-fill">
-                                        <use href="../assets/svg/icon-sprite.svg#calendar"></use>
-                                    </svg>
-                                    <svg class="half-circle svg-fill">
-                                        <use href="../assets/svg/icon-sprite.svg#halfcircle"></use>
+                                        <use href="../assets/svg/icon-sprite.svg#stroke-calendar"></use>
                                     </svg>
                                 </div>
                             </div>
                             <div>
-                                <h4>@ViewBag.LichSapToi</h4>
-                                <span class="f-light">Lịch sắp tới</span>
+                                <h4 id="todaySchedules">-</h4>
+                                <span class="f-light">Lịch hôm nay</span>
+                                <div class="font-success f-w-500">
+                                    <i class="icon-arrow-up"></i>
+                                    <span id="activeSchedules">0</span> đang diễn ra
+                                </div>
                             </div>
-                        </div>
-                        <div class="font-success f-w-500">
-                            <i class="icon-arrow-up icon-rotate me-1"></i>
-                            <span>7 ngày tới</span>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="card widget-1">
+                    <div class="card-body">
+                        <div class="widget-content">
+                            <div class="widget-round warning">
+                                <div class="bg-round">
+                                    <svg class="svg-fill">
+                                        <use href="../assets/svg/icon-sprite.svg#stroke-alert-triangle"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 id="maintenanceNeeded">-</h4>
+                                <span class="f-light">Cần bảo trì</span>
+                                <div class="font-warning f-w-500">
+                                    <i class="icon-arrow-up"></i>
+                                    <span id="criticalEquipment">0</span> khẩn cấp
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            <!-- Cảnh báo thiết bị -->
-            <div class="col-xxl-8 col-lg-12 box-col-12">
+        <div class="row">
+            <!-- Biểu đồ thống kê -->
+            <div class="col-xl-8">
                 <div class="card">
-                    <div class="card-header card-no-border">
-                        <div class="header-top">
-                            <h5>Cảnh báo thiết bị</h5>
-                            <div class="card-header-right-icon">
-                                <a asp-controller="BaoCao" asp-action="CanhBaoThietBi" class="btn btn-primary btn-sm">
-                                    Xem tất cả
-                                </a>
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5>Thống kê sử dụng thiết bị</h5>
+                            <div class="card-header-right">
+                                <select class="form-select form-select-sm" id="chartPeriod" onchange="updateChart()">
+                                    <option value="7">7 ngày qua</option>
+                                    <option value="30" selected>30 ngày qua</option>
+                                    <option value="90">3 tháng qua</option>
+                                    <option value="365">1 năm qua</option>
+                                </select>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body pt-0">
-                        <div class="table-responsive">
-                            <table class="table table-bordernone">
-                                <thead>
-                                    <tr>
-                                        <th>Loại cảnh báo</th>
-                                        <th>Thiết bị</th>
-                                        <th>Phòng</th>
-                                        <th>Tình trạng</th>
-                                        <th>Số lần sửa</th>
-                                        <th>Hành động</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (ViewBag.CanhBaoThietBi != null)
-                                    {
-                                        @foreach (var item in ViewBag.CanhBaoThietBi)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    <span class="badge badge-light-warning">
-                                                        @(item.GetType().GetProperty("LoaiCanhBao")?.GetValue(item, null))
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    @(item.GetType().GetProperty("TenLoai")?.GetValue(item, null)) -
-                                                    @(item.GetType().GetProperty("TenThuongHieu")?.GetValue(item, null))
-                                                </td>
-                                                <td>@(item.GetType().GetProperty("TenPhongMay")?.GetValue(item, null))</td>
-                                                <td>
-                                                    <span class="badge badge-light-danger">
-                                                        @(item.GetType().GetProperty("TinhTrang")?.GetValue(item, null))
-                                                    </span>
-                                                </td>
-                                                <td>@(item.GetType().GetProperty("SoLanSua")?.GetValue(item, null))</td>
-                                                <td>
-                                                    <a asp-controller="TrangTB" asp-action="Details"
-                                                       asp-route-id="@(item.GetType().GetProperty("MaTTB")?.GetValue(item, null))"
-                                                       class="btn btn-primary btn-sm">
-                                                        Chi tiết
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <tr>
-                                            <td colspan="6" class="text-center">Không có cảnh báo nào</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="card-body">
+                        <canvas id="usageChart" width="400" height="200"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- Thống kê nhanh -->
-            <div class="col-xxl-4 col-lg-12 box-col-12">
+            <!-- Trạng thái hệ thống -->
+            <div class="col-xl-4">
                 <div class="card">
-                    <div class="card-header card-no-border">
-                        <h5>Thống kê nhanh</h5>
+                    <div class="card-header">
+                        <h5>Trạng thái hệ thống</h5>
                     </div>
-                    <div class="card-body pt-0">
-                        <div class="activity-timeline">
-                            <div class="activity-item">
-                                <div class="activity-dot primary"></div>
-                                <div class="activity-content">
-                                    <h6>Thiết bị mới nhập</h6>
-                                    <span class="f-light">Hôm nay có 5 thiết bị mới được nhập</span>
-                                    <small class="text-muted">2 giờ trước</small>
+                    <div class="card-body">
+                        <!-- Hiệu suất tổng thể -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="f-w-500">Hiệu suất tổng thể</span>
+                                <span class="badge badge-light-success" id="overallEfficiency">85%</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-success" id="efficiencyBar" style="width: 85%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Thiết bị theo trạng thái -->
+                        <div class="mb-3">
+                            <h6 class="f-w-500 mb-3">Thiết bị theo trạng thái</h6>
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <div class="counter-content">
+                                        <h5 class="txt-success" id="goodEquipment">0</h5>
+                                        <span class="f-light">Tốt</span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="counter-content">
+                                        <h5 class="txt-warning" id="normalEquipment">0</h5>
+                                        <span class="f-light">Bình thường</span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="counter-content">
+                                        <h5 class="txt-danger" id="brokenEquipment">0</h5>
+                                        <span class="f-light">Hỏng</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="activity-item">
-                                <div class="activity-dot warning"></div>
-                                <div class="activity-content">
-                                    <h6>Thiết bị cần bảo trì</h6>
-                                    <span class="f-light">3 thiết bị cần được bảo trì định kỳ</span>
-                                    <small class="text-muted">5 giờ trước</small>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-dot success"></div>
-                                <div class="activity-content">
-                                    <h6>Lịch thực hành</h6>
-                                    <span class="f-light">Đã có 12 lịch thực hành được đặt hôm nay</span>
-                                    <small class="text-muted">1 ngày trước</small>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-dot secondary"></div>
-                                <div class="activity-content">
-                                    <h6>Báo cáo tuần</h6>
-                                    <span class="f-light">Báo cáo sử dụng thiết bị tuần này đã sẵn sàng</span>
-                                    <small class="text-muted">2 ngày trước</small>
+                        </div>
+
+                        <!-- Cảnh báo -->
+                        <div class="alert-section">
+                            <div class="alert alert-light-warning" id="warningAlert" style="display: none;">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <svg class="svg-color">
+                                            <use href="../assets/svg/icon-sprite.svg#stroke-alert-triangle"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-grow-1 ms-2">
+                                        <p id="warningMessage">Có thiết bị cần được bảo trì</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Liên kết nhanh -->
+        <div class="row">
+            <!-- Lịch thực hành hôm nay -->
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5>Lịch thực hành hôm nay</h5>
+                            <a asp-controller="LichThucHanh" asp-action="Index" class="btn btn-outline-primary btn-sm">
+                                Xem tất cả
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="todaySchedulesList">
+                            <div class="text-center text-muted py-3">
+                                <div class="spinner-border spinner-border-sm" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Đang tải lịch...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thiết bị cần chú ý -->
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5>Thiết bị cần chú ý</h5>
+                            <a asp-controller="TrangTB" asp-action="CanBaoTri" class="btn btn-outline-warning btn-sm">
+                                Xem tất cả
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="equipmentAlertsList">
+                            <div class="text-center text-muted py-3">
+                                <div class="spinner-border spinner-border-sm" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Đang tải danh sách...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header card-no-border">
-                        <h5>Truy cập nhanh</h5>
+                    <div class="card-header">
+                        <h5>Thao tác nhanh</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-2 col-sm-4 col-6 mb-3">
-                                <a asp-controller="TrangTB" asp-action="Create" class="btn btn-outline-primary w-100">
-                                    <i class="fa fa-plus mb-2"></i><br>
-                                    Thêm thiết bị
-                                </a>
+                            <div class="col-md-3">
+                                <div class="quick-action-card">
+                                    <a asp-controller="TrangTB" asp-action="Create" class="text-decoration-none">
+                                        <div class="text-center p-3 border rounded hover-card">
+                                            <div class="mb-2">
+                                                <i class="fa fa-plus-circle fa-2x text-primary"></i>
+                                            </div>
+                                            <h6>Thêm thiết bị</h6>
+                                            <small class="text-muted">Nhập thiết bị mới vào hệ thống</small>
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
-                            <div class="col-md-2 col-sm-4 col-6 mb-3">
-                                <a asp-controller="LichThucHanh" asp-action="DatLich" class="btn btn-outline-success w-100">
-                                    <i class="fa fa-calendar mb-2"></i><br>
-                                    Đặt lịch
-                                </a>
+                            <div class="col-md-3">
+                                <div class="quick-action-card">
+                                    <a asp-controller="LichThucHanh" asp-action="Create" class="text-decoration-none">
+                                        <div class="text-center p-3 border rounded hover-card">
+                                            <div class="mb-2">
+                                                <i class="fa fa-calendar-plus fa-2x text-success"></i>
+                                            </div>
+                                            <h6>Tạo lịch thực hành</h6>
+                                            <small class="text-muted">Lên lịch sử dụng phòng máy</small>
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
-                            <div class="col-md-2 col-sm-4 col-6 mb-3">
-                                <a asp-controller="BaoCao" asp-action="TongHop" class="btn btn-outline-info w-100">
-                                    <i class="fa fa-chart-bar mb-2"></i><br>
-                                    Báo cáo
-                                </a>
+                            <div class="col-md-3">
+                                <div class="quick-action-card">
+                                    <a asp-controller="TrangTB" asp-action="TimKiem" class="text-decoration-none">
+                                        <div class="text-center p-3 border rounded hover-card">
+                                            <div class="mb-2">
+                                                <i class="fa fa-search fa-2x text-info"></i>
+                                            </div>
+                                            <h6>Tìm kiếm thiết bị</h6>
+                                            <small class="text-muted">Tìm kiếm nâng cao thiết bị</small>
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
-                            <div class="col-md-2 col-sm-4 col-6 mb-3">
-                                <a asp-controller="TrangTB" asp-action="TimKiem" class="btn btn-outline-warning w-100">
-                                    <i class="fa fa-search mb-2"></i><br>
-                                    Tìm kiếm
-                                </a>
-                            </div>
-                            <div class="col-md-2 col-sm-4 col-6 mb-3">
-                                <a asp-controller="TrangTB" asp-action="CanBaoTri" class="btn btn-outline-danger w-100">
-                                    <i class="fa fa-wrench mb-2"></i><br>
-                                    Bảo trì
-                                </a>
-                            </div>
-                            <div class="col-md-2 col-sm-4 col-6 mb-3">
-                                <a asp-controller="NguoiDung" asp-action="Create" class="btn btn-outline-secondary w-100">
-                                    <i class="fa fa-user mb-2"></i><br>
-                                    Thêm user
-                                </a>
+                            <div class="col-md-3">
+                                <div class="quick-action-card">
+                                    <a asp-controller="BaoCao" asp-action="Index" class="text-decoration-none">
+                                        <div class="text-center p-3 border rounded hover-card">
+                                            <div class="mb-2">
+                                                <i class="fa fa-chart-bar fa-2x text-warning"></i>
+                                            </div>
+                                            <h6>Báo cáo</h6>
+                                            <small class="text-muted">Xem báo cáo thống kê</small>
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -308,18 +353,264 @@
 </div>
 
 @section Script {
-    <script>
-        $(document).ready(function() {
-            // Load dashboard stats
-            loadDashboardStats();
-        });
+        <!-- Chart.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 
-        function loadDashboardStats() {
-            $.get('@Url.Action("GetDashboardStats", "Home")', function(data) {
-                if (!data.error) {
-                    // Update stats if needed
+        <script>
+            let usageChart;
+
+            // Update current time
+            function updateDateTime() {
+                const now = new Date();
+                const timeOptions = { 
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    second: '2-digit',
+                    hour12: false 
+                };
+                const dateOptions = { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                };
+
+                document.getElementById('currentTime').textContent = now.toLocaleTimeString('vi-VN', timeOptions);
+                document.getElementById('currentDate').textContent = now.toLocaleDateString('vi-VN', dateOptions);
+            }
+
+            // Load dashboard data
+            async function loadDashboardData() {
+                try {
+                    const response = await fetch('@Url.Action("GetDashboardData", "Home")');
+                    const data = await response.json();
+
+                    // Update statistics
+                    document.getElementById('totalEquipment').textContent = data.totalEquipment || 0;
+                    document.getElementById('totalRooms').textContent = data.totalRooms || 0;
+                    document.getElementById('todaySchedules').textContent = data.todaySchedules || 0;
+                    document.getElementById('maintenanceNeeded').textContent = data.maintenanceNeeded || 0;
+
+                    // Update growth indicators
+                    document.getElementById('equipmentGrowth').textContent = `+${data.equipmentGrowth || 0}%`;
+                    document.getElementById('roomUtilization').textContent = `${data.roomUtilization || 0}%`;
+                    document.getElementById('activeSchedules').textContent = data.activeSchedules || 0;
+                    document.getElementById('criticalEquipment').textContent = data.criticalEquipment || 0;
+
+                    // Update system status
+                    document.getElementById('overallEfficiency').textContent = `${data.overallEfficiency || 85}%`;
+                    document.getElementById('efficiencyBar').style.width = `${data.overallEfficiency || 85}%`;
+
+                    document.getElementById('goodEquipment').textContent = data.goodEquipment || 0;
+                    document.getElementById('normalEquipment').textContent = data.normalEquipment || 0;
+                    document.getElementById('brokenEquipment').textContent = data.brokenEquipment || 0;
+
+                    // Show warnings if needed
+                    if (data.maintenanceNeeded > 0) {
+                        const warningAlert = document.getElementById('warningAlert');
+                        const warningMessage = document.getElementById('warningMessage');
+                        warningMessage.textContent = `Có ${data.maintenanceNeeded} thiết bị cần được bảo trì`;
+                        warningAlert.style.display = 'block';
+                    }
+
+                    // Update chart
+                    updateUsageChart(data.usageData);
+
+                } catch (error) {
+                    console.error('Error loading dashboard data:', error);
+                    // Set default values
+                    document.getElementById('totalEquipment').textContent = '0';
+                    document.getElementById('totalRooms').textContent = '0';
+                    document.getElementById('todaySchedules').textContent = '0';
+                    document.getElementById('maintenanceNeeded').textContent = '0';
                 }
+            }
+
+            // Load today's schedules
+            async function loadTodaySchedules() {
+                try {
+                    const response = await fetch('@Url.Action("GetTodaySchedules", "Home")');
+                    const data = await response.json();
+
+                    let html = '';
+                    if (data.length === 0) {
+                        html = '<div class="text-center text-muted py-3"><i class="fa fa-calendar fa-2x mb-2"></i><p>Không có lịch thực hành hôm nay</p></div>';
+                    } else {
+                        data.forEach(schedule => {
+                            const statusClass = schedule.isActive ? 'badge-light-success' : 'badge-light-info';
+                            const statusText = schedule.isActive ? 'Đang diễn ra' : 'Sắp tới';
+
+                            html += `
+                                <div class="d-flex justify-content-between align-items-center mb-3 p-2 border-start border-3 border-primary">
+                                    <div>
+                                        <h6 class="mb-1">${schedule.tenMonHoc}</h6>
+                                        <small class="text-muted">${schedule.tenGiangVien}</small>
+                                        <small class="d-block text-muted">${schedule.thoiGian}</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge ${statusClass}">${statusText}</span>
+                                        <small class="d-block text-muted">${schedule.soLuongSinhVien} SV</small>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                    }
+
+                    document.getElementById('todaySchedulesList').innerHTML = html;
+                } catch (error) {
+                    console.error('Error loading today schedules:', error);
+                    document.getElementById('todaySchedulesList').innerHTML = 
+                        '<div class="text-center text-muted py-3"><p>Không thể tải lịch thực hành</p></div>';
+                }
+            }
+
+            // Load equipment alerts
+            async function loadEquipmentAlerts() {
+                try {
+                    const response = await fetch('@Url.Action("GetEquipmentAlerts", "Home")');
+                    const data = await response.json();
+
+                    let html = '';
+                    if (data.length === 0) {
+                        html = '<div class="text-center text-muted py-3"><i class="fa fa-check-circle fa-2x mb-2 text-success"></i><p>Tất cả thiết bị đang hoạt động tốt</p></div>';
+                    } else {
+                        data.forEach(equipment => {
+                            const priorityClass = equipment.priority === 'critical' ? 'border-danger' : 
+                                               equipment.priority === 'high' ? 'border-warning' : 'border-info';
+                            const iconClass = equipment.priority === 'critical' ? 'text-danger' : 
+                                            equipment.priority === 'high' ? 'text-warning' : 'text-info';
+
+                            html += `
+                                <div class="d-flex justify-content-between align-items-center mb-3 p-2 border-start border-3 ${priorityClass}">
+                                    <div>
+                                        <h6 class="mb-1">TB-${equipment.maTTB.toString().padStart(4, '0')}</h6>
+                                        <small class="text-muted">${equipment.loaiThietBi}</small>
+                                        <small class="d-block text-muted">${equipment.lyDo}</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <i class="fa fa-exclamation-triangle ${iconClass}"></i>
+                                        <small class="d-block text-muted">${equipment.phongMay}</small>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                    }
+
+                    document.getElementById('equipmentAlertsList').innerHTML = html;
+                } catch (error) {
+                    console.error('Error loading equipment alerts:', error);
+                    document.getElementById('equipmentAlertsList').innerHTML = 
+                        '<div class="text-center text-muted py-3"><p>Không thể tải danh sách thiết bị</p></div>';
+                }
+            }
+
+            // Initialize chart
+            function initChart() {
+                const ctx = document.getElementById('usageChart').getContext('2d');
+                usageChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Thiết bị sử dụng',
+                            data: [],
+                            borderColor: 'rgb(75, 192, 192)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                            tension: 0.1,
+                            fill: true
+                        }, {
+                            label: 'Thiết bị bảo trì',
+                            data: [],
+                            borderColor: 'rgb(255, 99, 132)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                            tension: 0.1,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Update chart data
+            function updateUsageChart(data) {
+                if (usageChart && data) {
+                    usageChart.data.labels = data.labels || [];
+                    usageChart.data.datasets[0].data = data.usage || [];
+                    usageChart.data.datasets[1].data = data.maintenance || [];
+                    usageChart.update();
+                }
+            }
+
+            // Update chart based on period selection
+            function updateChart() {
+                const period = document.getElementById('chartPeriod').value;
+                fetch(`@Url.Action("GetUsageData", "Home")?period=${period}`)
+                    .then(response => response.json())
+                    .then(data => updateUsageChart(data))
+                    .catch(error => console.error('Error updating chart:', error));
+            }
+
+            // Initialize dashboard
+            $(document).ready(function() {
+                // Update time immediately and then every second
+                updateDateTime();
+                setInterval(updateDateTime, 1000);
+
+                // Load data
+                loadDashboardData();
+                loadTodaySchedules();
+                loadEquipmentAlerts();
+
+                // Initialize chart
+                initChart();
+
+                // Auto-refresh data every 5 minutes
+                setInterval(() => {
+                    loadDashboardData();
+                    loadTodaySchedules();
+                    loadEquipmentAlerts();
+                }, 300000);
+
+                // Hover effects for quick action cards
+                $('.hover-card').hover(
+                    function() { $(this).addClass('shadow-sm'); },
+                    function() { $(this).removeClass('shadow-sm'); }
+                );
             });
-        }
-    </script>
+        </script>
+
+        <style>
+            .hover-card {
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+            .hover-card:hover {
+                transform: translateY(-2px);
+                border-color: #007bff !important;
+            }
+            .counter-content h5 {
+                font-size: 24px;
+                margin-bottom: 5px;
+            }
+            .quick-action-card {
+                margin-bottom: 15px;
+            }
+            #usageChart {
+                height: 300px !important;
+            }
+        </style>
 }

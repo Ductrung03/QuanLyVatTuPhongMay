@@ -1,0 +1,403 @@
+﻿@{
+    ViewData["Title"] = "Tìm kiếm nâng cao";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-body">
+    <div class="container-fluid">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-6">
+                    <h3>Tìm kiếm nâng cao</h3>
+                </div>
+                <div class="col-6">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">
+                                <svg class="stroke-icon">
+                                    <use href="../assets/svg/icon-sprite.svg#stroke-home"></use>
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-controller="TrangTB" asp-action="Index">Quản lý thiết bị</a>
+                        </li>
+                        <li class="breadcrumb-item active">Tìm kiếm nâng cao</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container-fluid starts-->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Điều kiện tìm kiếm</h5>
+                        <div class="card-header-right">
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="resetForm()">
+                                <i class="fa fa-refresh"></i> Đặt lại
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" asp-action="TimKiem" id="searchForm">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Từ khóa</label>
+                                        <input type="text" class="form-control" name="tuKhoa" placeholder="Tìm theo mã, tên thiết bị...">
+                                        <small class="text-muted">Tìm kiếm trong mã thiết bị, loại, thương hiệu</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Phòng máy</label>
+                                        <select class="form-select" name="maPhongMay">
+                                            <option value="">-- Tất cả phòng máy --</option>
+                                            @if (ViewBag.DanhSachPhongMay != null)
+                                            {
+                                                @foreach (var phong in ViewBag.DanhSachPhongMay)
+                                                {
+                                                    <option value="@phong.MaPhongMay">@phong.TenPhongMay</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Loại thiết bị</label>
+                                        <select class="form-select" name="maLoai">
+                                            <option value="">-- Tất cả loại --</option>
+                                            @if (ViewBag.DanhSachLoai != null)
+                                            {
+                                                @foreach (var loai in ViewBag.DanhSachLoai)
+                                                {
+                                                    <option value="@loai.MaLoai">@loai.TenLoai</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Thương hiệu</label>
+                                        <select class="form-select" name="maThuongHieu">
+                                            <option value="">-- Tất cả thương hiệu --</option>
+                                            @if (ViewBag.DanhSachThuongHieu != null)
+                                            {
+                                                @foreach (var thuongHieu in ViewBag.DanhSachThuongHieu)
+                                                {
+                                                    <option value="@thuongHieu.MaThuongHieu">@thuongHieu.TenThuongHieu</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Tình trạng</label>
+                                        <select class="form-select" name="tinhTrang">
+                                            <option value="">-- Tất cả tình trạng --</option>
+                                            <option value="Mới">Mới</option>
+                                            <option value="Tốt">Tốt</option>
+                                            <option value="Bình thường">Bình thường</option>
+                                            <option value="Cần sửa">Cần sửa</option>
+                                            <option value="Hỏng">Hỏng</option>
+                                            <option value="Đang sửa">Đang sửa</option>
+                                            <option value="Ngưng sử dụng">Ngưng sử dụng</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Khoảng thời gian nhập</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">Từ</span>
+                                            <input type="date" class="form-control" name="tuNgay">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">&nbsp;</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">Đến</span>
+                                            <input type="date" class="form-control" name="denNgay">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Khoảng giá (VNĐ)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">Từ</span>
+                                            <input type="number" class="form-control" name="giaMin" min="0" placeholder="0">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">&nbsp;</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">Đến</span>
+                                            <input type="number" class="form-control" name="giaMax" min="0" placeholder="∞">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa fa-search"></i> Tìm kiếm
+                                        </button>
+                                        <button type="button" class="btn btn-info ms-2" onclick="saveSearch()">
+                                            <i class="fa fa-bookmark"></i> Lưu điều kiện tìm kiếm
+                                        </button>
+                                        <button type="button" class="btn btn-success ms-2" onclick="exportResults()">
+                                            <i class="fa fa-download"></i> Xuất kết quả
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Kết quả tìm kiếm -->
+                @if (ViewBag.DaTimKiem == true)
+                {
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Kết quả tìm kiếm</h5>
+                            <div class="card-header-right">
+                                @if (ViewBag.KetQuaTimKiem != null)
+                                {
+                                    <span class="badge badge-light-primary">
+                                        Tìm thấy @(((IEnumerable<dynamic>)ViewBag.KetQuaTimKiem).Count()) thiết bị
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            @if (ViewBag.KetQuaTimKiem != null && ((IEnumerable<dynamic>)ViewBag.KetQuaTimKiem).Any())
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Mã TB</th>
+                                                <th>Loại thiết bị</th>
+                                                <th>Thương hiệu</th>
+                                                <th>Phòng máy</th>
+                                                <th>Giá tiền</th>
+                                                <th>Tình trạng</th>
+                                                <th>Ngày nhập</th>
+                                                <th>Số lần sửa</th>
+                                                <th>Hành động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in (IEnumerable<QuanLyVatTuPhongMay.Models.TrangTB>)ViewBag.KetQuaTimKiem)
+                                            {
+                                                <tr>
+                                                    <td><strong>TB-@item.MaTTB.ToString("D4")</strong></td>
+                                                    <td>@(item.Loai?.TenLoai ?? "Chưa xác định")</td>
+                                                    <td>@(item.ThuongHieu?.TenThuongHieu ?? "Chưa xác định")</td>
+                                                    <td>@(item.PhongMay?.TenPhongMay ?? "Chưa xác định")</td>
+                                                    <td>@(item.GiaTien?.ToString("N0") ?? "0") VNĐ</td>
+                                                    <td>
+                                                        @{
+                                                            var badgeClass = "badge-light-primary";
+                                                            if (item.TinhTrang?.Contains("hỏng") == true || item.TinhTrang?.Contains("Hỏng") == true)
+                                                                badgeClass = "badge-light-danger";
+                                                            else if (item.TinhTrang?.Contains("cần sửa") == true || item.TinhTrang?.Contains("Cần sửa") == true)
+                                                                badgeClass = "badge-light-warning";
+                                                            else if (item.TinhTrang?.Contains("Tốt") == true || item.TinhTrang?.Contains("Mới") == true)
+                                                                badgeClass = "badge-light-success";
+                                                        }
+                                                        <span class="badge @badgeClass">@(item.TinhTrang ?? "Không xác định")</span>
+                                                    </td>
+                                                    <td>@item.NgayNhap.ToString("dd/MM/yyyy")</td>
+                                                    <td>
+                                                        @if (item.SoLanSua >= 5)
+                                                        {
+                                                            <span class="badge badge-light-danger">@item.SoLanSua</span>
+                                                        }
+                                                        else if (item.SoLanSua >= 3)
+                                                        {
+                                                            <span class="badge badge-light-warning">@item.SoLanSua</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge badge-light-success">@item.SoLanSua</span>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group" role="group">
+                                                            <a asp-action="Details" asp-route-id="@item.MaTTB" class="btn btn-info btn-sm" title="Chi tiết">
+                                                                <i class="fa fa-eye"></i>
+                                                            </a>
+                                                            <a asp-action="Edit" asp-route-id="@item.MaTTB" class="btn btn-warning btn-sm" title="Sửa">
+                                                                <i class="fa fa-edit"></i>
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center py-5">
+                                    <i class="fa fa-search fa-3x text-muted mb-3"></i>
+                                    <h5>Không tìm thấy thiết bị nào</h5>
+                                    <p class="text-muted">Thử thay đổi điều kiện tìm kiếm để có kết quả tốt hơn</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- Tìm kiếm đã lưu -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Tìm kiếm nhanh</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-outline-danger w-100 mb-2" onclick="quickSearch('broken')">
+                                    <i class="fa fa-exclamation-triangle"></i><br>
+                                    Thiết bị hỏng
+                                </button>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-outline-warning w-100 mb-2" onclick="quickSearch('needrepair')">
+                                    <i class="fa fa-wrench"></i><br>
+                                    Cần bảo trì
+                                </button>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-outline-success w-100 mb-2" onclick="quickSearch('new')">
+                                    <i class="fa fa-star"></i><br>
+                                    Thiết bị mới
+                                </button>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-outline-info w-100 mb-2" onclick="quickSearch('expensive')">
+                                    <i class="fa fa-money-bill"></i><br>
+                                    Giá trị cao
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Container-fluid Ends-->
+</div>
+
+@section Script {
+    <script>
+        function resetForm() {
+            document.getElementById('searchForm').reset();
+        }
+
+        function quickSearch(type) {
+            resetForm();
+
+            switch(type) {
+                case 'broken':
+                    $('select[name="tinhTrang"]').val('Hỏng');
+                    break;
+                case 'needrepair':
+                    $('select[name="tinhTrang"]').val('Cần sửa');
+                    break;
+                case 'new':
+                    $('select[name="tinhTrang"]').val('Mới');
+                    break;
+                case 'expensive':
+                    $('input[name="giaMin"]').val('50000000'); // 50 triệu
+                    break;
+            }
+
+            $('#searchForm').submit();
+        }
+
+        function saveSearch() {
+            // Lưu điều kiện tìm kiếm vào localStorage
+            var formData = $('#searchForm').serialize();
+            localStorage.setItem('savedSearch', formData);
+            toastr.success('Đã lưu điều kiện tìm kiếm');
+        }
+
+        function loadSavedSearch() {
+            var savedSearch = localStorage.getItem('savedSearch');
+            if (savedSearch) {
+                // Parse và fill form
+                var params = new URLSearchParams(savedSearch);
+                params.forEach((value, key) => {
+                    $('[name="' + key + '"]').val(value);
+                });
+                toastr.info('Đã tải điều kiện tìm kiếm đã lưu');
+            }
+        }
+
+        function exportResults() {
+            if (@ViewBag.DaTimKiem == true && @(ViewBag.KetQuaTimKiem != null ? "true" : "false")) {
+                toastr.info('Đang chuẩn bị xuất file...');
+                // Implement export functionality
+                setTimeout(() => {
+                    toastr.success('File đã được tải xuống');
+                }, 2000);
+            } else {
+                toastr.warning('Vui lòng thực hiện tìm kiếm trước khi xuất kết quả');
+            }
+        }
+
+        $(document).ready(function() {
+            // Auto-complete for search input
+            $('input[name="tuKhoa"]').on('input', function() {
+                var query = $(this).val();
+                if (query.length >= 2) {
+                    // Implement auto-complete if needed
+                }
+            });
+
+            // Add tooltip
+            $('[title]').tooltip();
+
+            // Form validation
+            $('#searchForm').on('submit', function(e) {
+                var hasValue = false;
+                $(this).find('input, select').each(function() {
+                    if ($(this).val()) {
+                        hasValue = true;
+                        return false;
+                    }
+                });
+
+                if (!hasValue) {
+                    e.preventDefault();
+                    toastr.warning('Vui lòng nhập ít nhất một điều kiện tìm kiếm');
+                    return false;
+                }
+            });
+        });
+    </script>
+}

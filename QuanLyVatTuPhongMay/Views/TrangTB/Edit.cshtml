@@ -1,6 +1,6 @@
 ﻿@model QuanLyVatTuPhongMay.Models.TrangTB
 @{
-    ViewData["Title"] = "Thêm thiết bị mới";
+    ViewData["Title"] = "Chỉnh sửa thiết bị";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,7 +9,7 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-6">
-                    <h3>Thêm thiết bị mới</h3>
+                    <h3>Chỉnh sửa thiết bị</h3>
                 </div>
                 <div class="col-6">
                     <ol class="breadcrumb">
@@ -23,7 +23,7 @@
                         <li class="breadcrumb-item">
                             <a asp-controller="TrangTB" asp-action="Index">Quản lý thiết bị</a>
                         </li>
-                        <li class="breadcrumb-item active">Thêm mới</li>
+                        <li class="breadcrumb-item active">Chỉnh sửa</li>
                     </ol>
                 </div>
             </div>
@@ -36,13 +36,25 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5>Thông tin thiết bị</h5>
+                        <h5>Chỉnh sửa thiết bị TB-@Model.MaTTB.ToString("D4")</h5>
+                        <div class="card-header-right">
+                            <a asp-action="Details" asp-route-id="@Model.MaTTB" class="btn btn-info btn-sm">
+                                <i class="fa fa-eye"></i> Xem chi tiết
+                            </a>
+                        </div>
                     </div>
                     <div class="card-body">
-                        <form asp-action="Create" method="post">
+                        <form asp-action="Edit" method="post">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="MaTTB" />
 
                             <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Mã thiết bị:</label>
+                                        <input type="text" class="form-control" value="TB-@Model.MaTTB.ToString("D4")" readonly>
+                                    </div>
+                                </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label asp-for="MaPhongMay" class="form-label">Phòng máy <span class="text-danger">*</span></label>
@@ -52,6 +64,9 @@
                                         <span asp-validation-for="MaPhongMay" class="text-danger"></span>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label asp-for="MaLoai" class="form-label">Loại thiết bị <span class="text-danger">*</span></label>
@@ -61,9 +76,6 @@
                                         <span asp-validation-for="MaLoai" class="text-danger"></span>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label asp-for="MaThuongHieu" class="form-label">Thương hiệu <span class="text-danger">*</span></label>
@@ -73,6 +85,9 @@
                                         <span asp-validation-for="MaThuongHieu" class="text-danger"></span>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label asp-for="GiaTien" class="form-label">Giá tiền (VNĐ) <span class="text-danger">*</span></label>
@@ -80,9 +95,6 @@
                                         <span asp-validation-for="GiaTien" class="text-danger"></span>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label asp-for="TinhTrang" class="form-label">Tình trạng</label>
@@ -92,6 +104,9 @@
                                         <span asp-validation-for="TinhTrang" class="text-danger"></span>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label asp-for="NgayNhap" class="form-label">Ngày nhập <span class="text-danger">*</span></label>
@@ -99,33 +114,65 @@
                                         <span asp-validation-for="NgayNhap" class="text-danger"></span>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label asp-for="SoLanSua" class="form-label">Số lần sửa</label>
+                                        <div class="input-group">
+                                            <input asp-for="SoLanSua" class="form-control" type="number" min="0" readonly>
+                                            <button type="button" class="btn btn-outline-warning" onclick="incrementRepairCount()">
+                                                <i class="fa fa-plus"></i> Tăng
+                                            </button>
+                                        </div>
+                                        <small class="text-muted">Sử dụng nút "Tăng" để ghi nhận lần sửa chữa mới</small>
+                                        <span asp-validation-for="SoLanSua" class="text-danger"></span>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label asp-for="SoLanSua" class="form-label">Số lần sửa</label>
-                                        <input asp-for="SoLanSua" class="form-control" type="number" min="0" value="0">
-                                        <span asp-validation-for="SoLanSua" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
                                         <label asp-for="MaLich" class="form-label">Lịch thực hành (tùy chọn)</label>
                                         <select asp-for="MaLich" class="form-select">
                                             <option value="">-- Không gán vào lịch --</option>
+                                            <!-- Các option khác sẽ được load từ ViewBag -->
                                         </select>
                                         <span asp-validation-for="MaLich" class="text-danger"></span>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Thông tin bổ sung</label>
+                                        <div class="mt-2">
+                                            <small class="text-muted">Số ngày đã sử dụng: <strong>@Model.SoNgayDaSuDung ngày</strong></small><br>
+                                            <small class="text-muted">
+                                                Trạng thái hoạt động:
+                                                <span class="@(Model.SoLanSua >= 5 ? "text-danger" : Model.TinhTrang?.Contains("hỏng") == true ? "text-danger" : "text-success")">
+                                                    @Model.TrangThaiHoatDong
+                                                </span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
+                            @if (Model.SoLanSua >= 5)
+                            {
+                                <div class="alert alert-warning">
+                                    <i class="fa fa-exclamation-triangle"></i>
+                                    <strong>Cảnh báo!</strong> Thiết bị đã sửa chữa @Model.SoLanSua lần. Nên xem xét thay thế hoặc kiểm tra tổng thể.
+                                </div>
+                            }
 
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-save"></i> Lưu thiết bị
+                                    <i class="fa fa-save"></i> Cập nhật thiết bị
                                 </button>
+                                <a asp-action="Details" asp-route-id="@Model.MaTTB" class="btn btn-info ms-2">
+                                    <i class="fa fa-eye"></i> Xem chi tiết
+                                </a>
                                 <a asp-action="Index" class="btn btn-secondary ms-2">
-                                    <i class="fa fa-times"></i> Hủy bỏ
+                                    <i class="fa fa-list"></i> Danh sách
                                 </a>
                             </div>
                         </form>
@@ -139,6 +186,19 @@
 
 @section Script {
     <script>
+        function incrementRepairCount() {
+            if (confirm('Bạn có chắc chắn muốn ghi nhận thêm một lần sửa chữa?')) {
+                var currentCount = parseInt($('#SoLanSua').val()) || 0;
+                $('#SoLanSua').val(currentCount + 1);
+
+                if (currentCount + 1 >= 5) {
+                    toastr.warning('Thiết bị đã sửa chữa nhiều lần, nên xem xét thay thế!');
+                }
+
+                toastr.success('Đã cập nhật số lần sửa chữa');
+            }
+        }
+
         $(document).ready(function() {
             // Validation
             $('form').on('submit', function(e) {
@@ -163,6 +223,15 @@
             // Remove validation on change
             $('select, input').on('change', function() {
                 $(this).removeClass('is-invalid');
+            });
+
+            // Auto-save draft (optional)
+            let autoSaveTimer;
+            $('input, select, textarea').on('change', function() {
+                clearTimeout(autoSaveTimer);
+                autoSaveTimer = setTimeout(function() {
+                    // Có thể implement auto-save draft ở đây
+                }, 30000); // Auto-save after 30 seconds of inactivity
             });
         });
     </script>

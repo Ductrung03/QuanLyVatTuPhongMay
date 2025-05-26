@@ -1,0 +1,342 @@
+﻿@model QuanLyVatTuPhongMay.Models.TrangTB
+@{
+    ViewData["Title"] = "Chi tiết thiết bị";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-body">
+    <div class="container-fluid">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-6">
+                    <h3>Chi tiết thiết bị</h3>
+                </div>
+                <div class="col-6">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">
+                                <svg class="stroke-icon">
+                                    <use href="../assets/svg/icon-sprite.svg#stroke-home"></use>
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-controller="TrangTB" asp-action="Index">Quản lý thiết bị</a>
+                        </li>
+                        <li class="breadcrumb-item active">Chi tiết</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container-fluid starts-->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Thông tin cơ bản -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Thông tin thiết bị TB-@Model.MaTTB.ToString("D4")</h5>
+                        <div class="card-header-right">
+                            <a asp-action="Edit" asp-route-id="@Model.MaTTB" class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Chỉnh sửa
+                            </a>
+                            <a asp-action="Index" class="btn btn-secondary btn-sm ms-2">
+                                <i class="fa fa-list"></i> Danh sách
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Mã thiết bị:</label>
+                                    <p class="form-control-plaintext">TB-@Model.MaTTB.ToString("D4")</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Loại thiết bị:</label>
+                                    <p class="form-control-plaintext">@(Model.Loai?.TenLoai ?? "Chưa xác định")</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Thương hiệu:</label>
+                                    <p class="form-control-plaintext">@(Model.ThuongHieu?.TenThuongHieu ?? "Chưa xác định")</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Phòng máy:</label>
+                                    <p class="form-control-plaintext">
+                                        @if (Model.PhongMay != null)
+                                        {
+                                            <a asp-controller="PhongMay" asp-action="Details" asp-route-id="@Model.MaPhongMay">
+                                                @Model.PhongMay.TenPhongMay
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Chưa xác định</span>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Giá tiền:</label>
+                                    <p class="form-control-plaintext">
+                                        <span class="badge badge-light-success fs-6">
+                                            @(Model.GiaTien?.ToString("N0") ?? "0") VNĐ
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Tình trạng:</label>
+                                    <p class="form-control-plaintext">
+                                        @{
+                                            var badgeClass = "badge-light-primary";
+                                            if (Model.TinhTrang?.Contains("hỏng") == true || Model.TinhTrang?.Contains("Hỏng") == true)
+                                                badgeClass = "badge-light-danger";
+                                            else if (Model.TinhTrang?.Contains("cần sửa") == true || Model.TinhTrang?.Contains("Cần sửa") == true)
+                                                badgeClass = "badge-light-warning";
+                                            else if (Model.TinhTrang?.Contains("Tốt") == true || Model.TinhTrang?.Contains("Mới") == true)
+                                                badgeClass = "badge-light-success";
+                                        }
+                                        <span class="badge @badgeClass fs-6">@(Model.TinhTrang ?? "Không xác định")</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Ngày nhập:</label>
+                                    <p class="form-control-plaintext">@Model.NgayNhap.ToString("dd/MM/yyyy")</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Số lần sửa:</label>
+                                    <p class="form-control-plaintext">
+                                        @if (Model.SoLanSua >= 5)
+                                        {
+                                            <span class="badge badge-light-danger fs-6">@Model.SoLanSua lần</span>
+                                        }
+                                        else if (Model.SoLanSua >= 3)
+                                        {
+                                            <span class="badge badge-light-warning fs-6">@Model.SoLanSua lần</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-light-success fs-6">@Model.SoLanSua lần</span>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (Model.LichThucHanh != null)
+                        {
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Lịch thực hành:</label>
+                                        <p class="form-control-plaintext">
+                                            <a asp-controller="LichThucHanh" asp-action="Details" asp-route-id="@Model.MaLich">
+                                                LTH-@Model.MaLich?.ToString("D4") - @Model.LichThucHanh.ThoiGianBD.ToString("dd/MM/yyyy HH:mm")
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Lịch sử hoạt động -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Lịch sử hoạt động</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (ViewBag.LichSuHoatDong != null)
+                        {
+                            <div class="timeline">
+                                <!-- Timeline sẽ được load từ AJAX -->
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted">Chưa có lịch sử hoạt động nào được ghi nhận.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thống kê và cảnh báo -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Thống kê sử dụng</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <small class="text-muted">Số ngày đã sử dụng</small>
+                            <h4 class="mb-0 text-primary">@Model.SoNgayDaSuDung ngày</h4>
+                        </div>
+                        <div class="mb-3">
+                            <small class="text-muted">Trạng thái hoạt động</small>
+                            <h6 class="mb-0">
+                                @{
+                                    var statusClass = Model.SoLanSua >= 5 ? "text-danger" :
+                                    Model.TinhTrang?.Contains("hỏng") == true ? "text-danger" : "text-success";
+                                    var statusText = Model.TrangThaiHoatDong;
+                                }
+                                <span class="@statusClass">@statusText</span>
+                            </h6>
+                        </div>
+
+                        @if (Model.SoLanSua >= 5)
+                        {
+                            <div class="alert alert-warning">
+                                <i class="fa fa-exclamation-triangle"></i>
+                                <strong>Cảnh báo!</strong> Thiết bị đã sửa nhiều lần, cần kiểm tra tổng thể.
+                            </div>
+                        }
+
+                        @if (Model.SoNgayDaSuDung > 365 * 5)
+                        {
+                            <div class="alert alert-info">
+                                <i class="fa fa-info-circle"></i>
+                                <strong>Thông báo:</strong> Thiết bị đã sử dụng lâu, nên xem xét thay thế.
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Hành động nhanh -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Hành động nhanh</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-success" onclick="showStatusModal(@Model.MaTTB, '@Model.TinhTrang')">
+                                <i class="fa fa-exchange-alt"></i> Chuyển trạng thái
+                            </button>
+                            <button type="button" class="btn btn-warning" onclick="incrementRepairCount(@Model.MaTTB)">
+                                <i class="fa fa-wrench"></i> Ghi nhận sửa chữa
+                            </button>
+                            <a asp-controller="BaoCao" asp-action="LichSuHoatDongThietBi" asp-route-maTTB="@Model.MaTTB" class="btn btn-info">
+                                <i class="fa fa-history"></i> Xem lịch sử chi tiết
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Container-fluid Ends-->
+</div>
+
+<!-- Modal chuyển trạng thái -->
+<div class="modal fade" id="statusModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chuyển trạng thái thiết bị</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="statusForm">
+                    <input type="hidden" id="equipmentId" name="id">
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái hiện tại:</label>
+                        <span id="currentStatus" class="badge badge-light-info"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newStatus" class="form-label">Trạng thái mới</label>
+                        <select class="form-select" id="newStatus" name="tinhTrangMoi" required>
+                            <option value="">Chọn trạng thái</option>
+                            <option value="Mới">Mới</option>
+                            <option value="Tốt">Tốt</option>
+                            <option value="Bình thường">Bình thường</option>
+                            <option value="Cần sửa">Cần sửa</option>
+                            <option value="Hỏng">Hỏng</option>
+                            <option value="Đang sửa">Đang sửa</option>
+                            <option value="Ngưng sử dụng">Ngưng sử dụng</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="note" class="form-label">Ghi chú</label>
+                        <textarea class="form-control" id="note" name="ghiChu" rows="3" placeholder="Nhập ghi chú về việc thay đổi trạng thái..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" onclick="changeStatus()">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Script {
+    <script>
+        function showStatusModal(id, currentStatus) {
+            $('#equipmentId').val(id);
+            $('#currentStatus').text(currentStatus);
+            $('#statusModal').modal('show');
+        }
+
+        function changeStatus() {
+            var formData = $('#statusForm').serialize();
+
+            $.post('@Url.Action("ChuyenTrangThai", "TrangTB")', formData, function(response) {
+                if (response.success) {
+                    toastr.success(response.message);
+                    $('#statusModal').modal('hide');
+                    location.reload();
+                } else {
+                    toastr.error(response.message);
+                }
+            }).fail(function() {
+                toastr.error('Có lỗi xảy ra khi cập nhật trạng thái');
+            });
+        }
+
+        function incrementRepairCount(id) {
+            if (confirm('Bạn có chắc chắn muốn ghi nhận một lần sửa chữa cho thiết bị này?')) {
+                $.post('@Url.Action("CapNhatSoLanSua", "TrangTB")', { maTTB: id }, function(response) {
+                    if (response.success) {
+                        toastr.success('Đã cập nhật số lần sửa');
+                        location.reload();
+                    } else {
+                        toastr.error('Có lỗi xảy ra khi cập nhật');
+                    }
+                }).fail(function() {
+                    toastr.error('Có lỗi xảy ra khi cập nhật số lần sửa');
+                });
+            }
+        }
+
+        $(document).ready(function() {
+            // Load lịch sử hoạt động nếu có
+            if ('@ViewBag.LichSuHoatDong' !== '') {
+                // Có thể load timeline bằng AJAX
+            }
+        });
+    </script>
+}

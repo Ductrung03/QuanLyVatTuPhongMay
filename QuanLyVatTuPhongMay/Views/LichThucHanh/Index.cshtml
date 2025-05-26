@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<QuanLyVatTuPhongMay.Models.LichThucHanh>
 @{
-    ViewData["Title"] = "Danh sách lịch thực hành";
+    ViewData["Title"] = "Quản lý lịch thực hành";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,7 +9,7 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-6">
-                    <h3>Lịch thực hành</h3>
+                    <h3>Quản lý lịch thực hành</h3>
                 </div>
                 <div class="col-6">
                     <ol class="breadcrumb">
@@ -20,7 +20,6 @@
                                 </svg>
                             </a>
                         </li>
-                        <li class="breadcrumb-item">Quản lý lịch</li>
                         <li class="breadcrumb-item active">Lịch thực hành</li>
                     </ol>
                 </div>
@@ -30,57 +29,107 @@
 
     <!-- Container-fluid starts-->
     <div class="container-fluid">
+        <!-- Thống kê tổng quan -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card widget-1">
+                    <div class="card-body">
+                        <div class="widget-content">
+                            <div class="widget-round primary">
+                                <div class="bg-round">
+                                    <svg class="svg-fill">
+                                        <use href="../assets/svg/icon-sprite.svg#stroke-calendar"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div>
+                                <h4>@Model.Count()</h4>
+                                <span class="f-light">Tổng lịch</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card widget-1">
+                    <div class="card-body">
+                        <div class="widget-content">
+                            <div class="widget-round success">
+                                <div class="bg-round">
+                                    <svg class="svg-fill">
+                                        <use href="../assets/svg/icon-sprite.svg#stroke-check"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div>
+                                <h4>@Model.Count(l => l.ThoiGianBD.Date == DateTime.Today)</h4>
+                                <span class="f-light">Hôm nay</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card widget-1">
+                    <div class="card-body">
+                        <div class="widget-content">
+                            <div class="widget-round warning">
+                                <div class="bg-round">
+                                    <svg class="svg-fill">
+                                        <use href="../assets/svg/icon-sprite.svg#stroke-clock"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div>
+                                <h4>@Model.Count(l => l.ThoiGianBD.Date >= DateTime.Today && l.ThoiGianBD.Date <= DateTime.Today.AddDays(7))</h4>
+                                <span class="f-light">Tuần này</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card widget-1">
+                    <div class="card-body">
+                        <div class="widget-content">
+                            <div class="widget-round info">
+                                <div class="bg-round">
+                                    <svg class="svg-fill">
+                                        <use href="../assets/svg/icon-sprite.svg#tag"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div>
+                                <h4>@Model.Sum(l => l.TrangTBs?.Count ?? 0)</h4>
+                                <span class="f-light">Thiết bị sử dụng</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header card-no-border">
                         <div class="header-top">
-                            <h5>Quản lý lịch thực hành</h5>
+                            <h5>Danh sách lịch thực hành</h5>
                             <div class="card-header-right-icon">
-                                <a asp-action="Create" class="btn btn-primary">
+                                <button type="button" class="btn btn-secondary" id="calendarViewBtn" onclick="switchToCalendarView()">
+                                    <i class="fa fa-calendar"></i> Xem lịch
+                                </button>
+                                <a asp-action="Create" class="btn btn-primary ms-2">
                                     <i class="fa fa-plus"></i> Tạo lịch mới
                                 </a>
-                                <a asp-action="DatLich" class="btn btn-success ms-2">
-                                    <i class="fa fa-calendar-plus"></i> Đặt lịch
-                                </a>
-                                <a asp-action="LichHomNay" class="btn btn-info ms-2">
-                                    <i class="fa fa-calendar-day"></i> Lịch hôm nay
-                                </a>
+                                <button type="button" class="btn btn-info ms-2" onclick="exportSchedule()">
+                                    <i class="fa fa-download"></i> Xuất lịch
+                                </button>
                             </div>
                         </div>
                     </div>
 
                     <div class="card-body">
-                        <!-- Filter -->
-                        <form method="get" class="row mb-4">
-                            <div class="col-md-3">
-                                <label class="form-label">Trạng thái</label>
-                                <select class="form-select" name="trangThai">
-                                    @if (ViewBag.TrangThais != null)
-                                    {
-                                        @foreach (var item in (SelectList)ViewBag.TrangThais)
-                                        {
-                                            <option value="@item.Value" selected="@(item.Selected)">@item.Text</option>
-                                        }
-                                    }
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Từ ngày</label>
-                                <input type="date" class="form-control" name="tuNgay" value="@ViewBag.TuNgay">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Đến ngày</label>
-                                <input type="date" class="form-control" name="denNgay" value="@ViewBag.DenNgay">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">&nbsp;</label>
-                                <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fa fa-filter"></i> Lọc
-                                </button>
-                            </div>
-                        </form>
-
                         @if (TempData["SuccessMessage"] != null)
                         {
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -97,137 +146,153 @@
                             </div>
                         }
 
-                        <!-- Calendar View (Mini) -->
-                        <div class="row mb-4">
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h6>Lịch tháng này</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div id="calendar-mini" class="calendar-widget"></div>
-                                    </div>
-                                </div>
+                        <!-- Filters -->
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label class="form-label">Tìm kiếm</label>
+                                <input type="text" class="form-control" id="searchInput" placeholder="Tìm theo tên môn học, GV..." onkeyup="filterSchedules()">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Thời gian</label>
+                                <select class="form-select" id="timeFilter" onchange="filterSchedules()">
+                                    <option value="">Tất cả</option>
+                                    <option value="today">Hôm nay</option>
+                                    <option value="tomorrow">Ngày mai</option>
+                                    <option value="this_week">Tuần này</option>
+                                    <option value="next_week">Tuần sau</option>
+                                    <option value="this_month">Tháng này</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Trạng thái</label>
+                                <select class="form-select" id="statusFilter" onchange="filterSchedules()">
+                                    <option value="">Tất cả</option>
+                                    <option value="upcoming">Sắp tới</option>
+                                    <option value="ongoing">Đang diễn ra</option>
+                                    <option value="completed">Đã hoàn thành</option>
+                                    <option value="cancelled">Đã hủy</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Sắp xếp</label>
+                                <select class="form-select" id="sortBy" onchange="sortSchedules()">
+                                    <option value="time_asc">Thời gian (Tăng dần)</option>
+                                    <option value="time_desc">Thời gian (Giảm dần)</option>
+                                    <option value="subject">Môn học</option>
+                                    <option value="instructor">Giảng viên</option>
+                                </select>
                             </div>
                         </div>
 
-                        <!-- Data Table -->
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Mã lịch</th>
-                                        <th>Người đặt</th>
-                                        <th>Thời gian bắt đầu</th>
-                                        <th>Thời gian kết thúc</th>
-                                        <th>Thời lượng</th>
-                                        <th>Trạng thái</th>
-                                        <th>Tình trạng</th>
-                                        <th>Hành động</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (Model.Any())
-                                    {
-                                        @foreach (var item in Model)
-                                        {
+                        <!-- List View -->
+                        <div id="listView">
+                            @if (Model.Any())
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="scheduleTable">
+                                        <thead>
                                             <tr>
-                                                <td><strong>LTH-@item.MaLich.ToString("D4")</strong></td>
-                                                <td>@(item.NguoiDung?.TenDangNhap ?? "Không xác định")</td>
-                                                <td>@item.ThoiGianBD.ToString("dd/MM/yyyy HH:mm")</td>
-                                                <td>@item.ThoiGianKT.ToString("dd/MM/yyyy HH:mm")</td>
-                                                <td>@item.ThoiGianSuDung phút</td>
-                                                <td>
-                                                    @{
-                                                        var statusBadge = "badge-light-primary";
-                                                        switch (item.TrangThai)
-                                                        {
-                                                            case "Đã đặt":
-                                                                statusBadge = "badge-light-info";
-                                                                break;
-                                                            case "Đang thực hiện":
-                                                                statusBadge = "badge-light-warning";
-                                                                break;
-                                                            case "Hoàn thành":
-                                                                statusBadge = "badge-light-success";
-                                                                break;
-                                                            case "Đã hủy":
-                                                                statusBadge = "badge-light-danger";
-                                                                break;
-                                                        }
-                                                    }
-                                                    <span class="badge @statusBadge">@item.TrangThai</span>
-                                                </td>
-                                                <td>
-                                                    @{
-                                                        var currentStatusBadge = "badge-light-secondary";
-                                                        var statusText = item.TrangThaiChiTiet;
-                                                        switch (statusText)
-                                                        {
-                                                            case "Chưa bắt đầu":
-                                                                currentStatusBadge = "badge-light-info";
-                                                                break;
-                                                            case "Đang thực hiện":
-                                                                currentStatusBadge = "badge-light-warning";
-                                                                break;
-                                                            case "Đã kết thúc":
-                                                                currentStatusBadge = "badge-light-success";
-                                                                break;
-                                                            case "Đã hủy":
-                                                                currentStatusBadge = "badge-light-danger";
-                                                                break;
-                                                        }
-                                                    }
-                                                    <span class="badge @currentStatusBadge">@statusText</span>
-                                                </td>
-                                                <td>
-                                                    <div class="btn-group" role="group">
-                                                        <a asp-action="Details" asp-route-id="@item.MaLich" class="btn btn-info btn-sm" title="Chi tiết">
-                                                            <i class="fa fa-eye"></i>
-                                                        </a>
-                                                        @if (item.TrangThai != "Đã hủy" && item.TrangThai != "Hoàn thành")
-                                                        {
-                                                            <a asp-action="Edit" asp-route-id="@item.MaLich" class="btn btn-warning btn-sm" title="Sửa">
-                                                                <i class="fa fa-edit"></i>
-                                                            </a>
-                                                            <div class="btn-group" role="group">
-                                                                <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" title="Cập nhật trạng thái">
-                                                                    <i class="fa fa-cog"></i>
-                                                                </button>
-                                                                <ul class="dropdown-menu">
-                                                                    <li><a class="dropdown-item" href="#" onclick="updateStatus(@item.MaLich, 'Đã đặt')">Đã đặt</a></li>
-                                                                    <li><a class="dropdown-item" href="#" onclick="updateStatus(@item.MaLich, 'Đang thực hiện')">Đang thực hiện</a></li>
-                                                                    <li><a class="dropdown-item" href="#" onclick="updateStatus(@item.MaLich, 'Hoàn thành')">Hoàn thành</a></li>
-                                                                    <li><hr class="dropdown-divider"></li>
-                                                                    <li><a class="dropdown-item text-danger" href="#" onclick="cancelSchedule(@item.MaLich)">Hủy lịch</a></li>
-                                                                </ul>
-                                                            </div>
-                                                        }
-                                                        <button type="button" class="btn btn-danger btn-sm" title="Xóa" onclick="confirmDelete(@item.MaLich)">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
+                                                <th>Thời gian</th>
+                                                <th>Môn học</th>
+                                                <th>Giảng viên</th>
+                                                <th>Số lượng SV</th>
+                                                <th>Thiết bị</th>
+                                                <th>Trạng thái</th>
+                                                <th>Hành động</th>
                                             </tr>
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <tr>
-                                            <td colspan="8" class="text-center">
-                                                <div class="empty-state py-5">
-                                                    <i class="fa fa-calendar fa-3x text-muted mb-3"></i>
-                                                    <h5>Chưa có lịch thực hành nào</h5>
-                                                    <p class="text-muted">
-                                                        Hãy <a asp-action="Create">tạo lịch mới</a> hoặc
-                                                        <a asp-action="DatLich">đặt lịch thực hành</a>
-                                                    </p>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.OrderBy(l => l.ThoiGianBD))
+                                            {
+                                                @{
+                                                    var now = DateTime.Now;
+                                                    var status = "";
+                                                    var statusClass = "";
+                                                    
+                                                    if (item.ThoiGianBD > now)
+                                                    {
+                                                        status = "Sắp tới";
+                                                        statusClass = "badge-light-info";
+                                                    }
+                                                    else if (item.ThoiGianBD <= now && item.ThoiGianKT >= now)
+                                                    {
+                                                        status = "Đang diễn ra";
+                                                        statusClass = "badge-light-success";
+                                                    }
+                                                    else
+                                                    {
+                                                        status = "Đã hoàn thành";
+                                                        statusClass = "badge-light-secondary";
+                                                    }
+                                                }
+
+                                                <tr data-time="@item.ThoiGianBD.ToString("yyyy-MM-dd")" data-subject="@item.TenMonHoc" data-instructor="@item.TenGiangVien" data-status="@status.ToLower().Replace(" ", "_")">
+                                                    <td>
+                                                        <div>
+                                                            <strong>@item.ThoiGianBD.ToString("dd/MM/yyyy")</strong>
+                                                            <small class="d-block text-muted">
+                                                                @item.ThoiGianBD.ToString("HH:mm") - @item.ThoiGianKT.ToString("HH:mm")
+                                                            </small>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <strong>@item.TenMonHoc</strong>
+                                                        @if (!string.IsNullOrEmpty(item.MoTa))
+                                                        {
+                                                            <small class="d-block text-muted">@item.MoTa</small>
+                                                        }
+                                                    </td>
+                                                    <td>@item.TenGiangVien</td>
+                                                    <td>
+                                                        <span class="badge badge-light-primary">@item.SoLuongSinhVien</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge badge-light-secondary">@(item.TrangTBs?.Count ?? 0)</span>
+                                                        @if (item.TrangTBs?.Any() == true)
+                                                        {
+                                                            <button type="button" class="btn btn-link btn-sm p-0 ms-1" onclick="showEquipmentDetails(@item.MaLich)" title="Xem thiết bị">
+                                                                <i class="fa fa-eye"></i>
+                                                            </button>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge @statusClass">@status</span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group" role="group">
+                                                            <a asp-action="Details" asp-route-id="@item.MaLich" class="btn btn-info btn-sm" title="Chi tiết">
+                                                                <i class="fa fa-eye"></i>
+                                                            </a>
+                                                            @if (item.ThoiGianBD > DateTime.Now)
+                                                            {
+                                                                <a asp-action="Edit" asp-route-id="@item.MaLich" class="btn btn-warning btn-sm" title="Sửa">
+                                                                    <i class="fa fa-edit"></i>
+                                                                </a>
+                                                                <button type="button" class="btn btn-danger btn-sm" title="Hủy" onclick="cancelSchedule(@item.MaLich, '@item.TenMonHoc')">
+                                                                    <i class="fa fa-times"></i>
+                                                                </button>
+                                                            }
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center py-5">
+                                    <i class="fa fa-calendar-times fa-3x text-muted mb-3"></i>
+                                    <h5>Chưa có lịch thực hành nào</h5>
+                                    <p class="text-muted">Hãy <a asp-action="Create">tạo lịch thực hành đầu tiên</a> để bắt đầu</p>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Calendar View (Hidden by default) -->
+                        <div id="calendarView" class="d-none">
+                            <div id="fullCalendar"></div>
                         </div>
                     </div>
                 </div>
@@ -237,32 +302,178 @@
     <!-- Container-fluid Ends-->
 </div>
 
+<!-- Modal hiển thị thiết bị -->
+<div class="modal fade" id="equipmentModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thiết bị sử dụng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="equipmentList">
+                    <!-- Equipment list will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Script {
+    <!-- FullCalendar CSS and JS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+
     <script>
-        function updateStatus(id, status) {
-            if (confirm('Bạn có chắc chắn muốn cập nhật trạng thái thành "' + status + '"?')) {
-                $.post('@Url.Action("CapNhatTrangThai", "LichThucHanh")', {
-                    id: id,
-                    trangThai: status
-                }, function(response) {
-                    if (response.success) {
-                        toastr.success(response.message);
-                        location.reload();
-                    } else {
-                        toastr.error(response.message);
+        var calendarInitialized = false;
+
+        function filterSchedules() {
+            var searchTerm = $('#searchInput').val().toLowerCase();
+            var timeFilter = $('#timeFilter').val();
+            var statusFilter = $('#statusFilter').val();
+
+            $('#scheduleTable tbody tr').each(function() {
+                var row = $(this);
+                var showRow = true;
+
+                // Search filter
+                if (searchTerm) {
+                    var subject = row.data('subject').toLowerCase();
+                    var instructor = row.data('instructor').toLowerCase();
+                    if (!subject.includes(searchTerm) && !instructor.includes(searchTerm)) {
+                        showRow = false;
                     }
-                }).fail(function() {
-                    toastr.error('Có lỗi xảy ra khi cập nhật trạng thái');
-                });
+                }
+
+                // Time filter
+                if (timeFilter) {
+                    var rowDate = moment(row.data('time'));
+                    var today = moment().startOf('day');
+                    
+                    switch(timeFilter) {
+                        case 'today':
+                            if (!rowDate.isSame(today, 'day')) showRow = false;
+                            break;
+                        case 'tomorrow':
+                            if (!rowDate.isSame(today.clone().add(1, 'day'), 'day')) showRow = false;
+                            break;
+                        case 'this_week':
+                            if (!rowDate.isBetween(today, today.clone().add(7, 'days'))) showRow = false;
+                            break;
+                        case 'next_week':
+                            var nextWeekStart = today.clone().add(7, 'days');
+                            if (!rowDate.isBetween(nextWeekStart, nextWeekStart.clone().add(7, 'days'))) showRow = false;
+                            break;
+                        case 'this_month':
+                            if (!rowDate.isSame(today, 'month')) showRow = false;
+                            break;
+                    }
+                }
+
+                // Status filter
+                if (statusFilter && row.data('status') !== statusFilter) {
+                    showRow = false;
+                }
+
+                row.toggle(showRow);
+            });
+        }
+
+        function sortSchedules() {
+            var sortBy = $('#sortBy').val();
+            var $tbody = $('#scheduleTable tbody');
+            var $rows = $tbody.children('tr').get();
+
+            $rows.sort(function(a, b) {
+                var aVal, bVal;
+                switch(sortBy) {
+                    case 'time_asc':
+                        aVal = moment($(a).data('time'));
+                        bVal = moment($(b).data('time'));
+                        return aVal.isBefore(bVal) ? -1 : 1;
+                    case 'time_desc':
+                        aVal = moment($(a).data('time'));
+                        bVal = moment($(b).data('time'));
+                        return aVal.isAfter(bVal) ? -1 : 1;
+                    case 'subject':
+                        aVal = $(a).data('subject');
+                        bVal = $(b).data('subject');
+                        return aVal.localeCompare(bVal);
+                    case 'instructor':
+                        aVal = $(a).data('instructor');
+                        bVal = $(b).data('instructor');
+                        return aVal.localeCompare(bVal);
+                }
+            });
+
+            $.each($rows, function(index, row) {
+                $tbody.append(row);
+            });
+        }
+
+        function switchToCalendarView() {
+            if ($('#calendarView').hasClass('d-none')) {
+                $('#listView').addClass('d-none');
+                $('#calendarView').removeClass('d-none');
+                $('#calendarViewBtn').html('<i class="fa fa-list"></i> Xem danh sách');
+                
+                if (!calendarInitialized) {
+                    initializeCalendar();
+                    calendarInitialized = true;
+                }
+            } else {
+                $('#listView').removeClass('d-none');
+                $('#calendarView').addClass('d-none');
+                $('#calendarViewBtn').html('<i class="fa fa-calendar"></i> Xem lịch');
             }
         }
 
-        function cancelSchedule(id) {
-            if (confirm('Bạn có chắc chắn muốn hủy lịch này?')) {
-                $.post('@Url.Action("HuyLich", "LichThucHanh")', {
-                    id: id,
-                    maNguoiDung: 1 // Cần lấy từ session thực tế
-                }, function(response) {
+        function initializeCalendar() {
+            var events = @Html.Raw(Json.Serialize(Model.Select(l => new {
+                id = l.MaLich,
+                title = l.TenMonHoc + " - " + l.TenGiangVien,
+                start = l.ThoiGianBD.ToString("yyyy-MM-ddTHH:mm:ss"),
+                end = l.ThoiGianKT.ToString("yyyy-MM-ddTHH:mm:ss"),
+                description = l.MoTa,
+                studentCount = l.SoLuongSinhVien,
+                equipmentCount = l.TrangTBs?.Count ?? 0
+            })));
+
+            $('#fullCalendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                defaultView: 'agendaWeek',
+                events: events,
+                eventClick: function(event) {
+                    window.location.href = '@Url.Action("Details", "LichThucHanh")/' + event.id;
+                },
+                eventRender: function(event, element) {
+                    element.attr('title', 
+                        event.title + '\n' +
+                        'Sinh viên: ' + event.studentCount + '\n' +
+                        'Thiết bị: ' + event.equipmentCount +
+                        (event.description ? '\n' + event.description : '')
+                    );
+                }
+            });
+        }
+
+        function showEquipmentDetails(scheduleId) {
+            $.get('@Url.Action("GetEquipmentBySchedule", "LichThucHanh")/' + scheduleId, function(data) {
+                $('#equipmentList').html(data);
+                $('#equipmentModal').modal('show');
+            }).fail(function() {
+                toastr.error('Không thể tải danh sách thiết bị');
+            });
+        }
+
+        function cancelSchedule(id, subject) {
+            if (confirm(`Bạn có chắc chắn muốn hủy lịch thực hành "${subject}"?`)) {
+                $.post('@Url.Action("Cancel", "LichThucHanh")/' + id, function(response) {
                     if (response.success) {
                         toastr.success(response.message);
                         location.reload();
@@ -275,62 +486,27 @@
             }
         }
 
-        function confirmDelete(id) {
-            if (confirm('Bạn có chắc chắn muốn xóa lịch này? Hành động này không thể hoàn tác.')) {
-                $.post('@Url.Action("Delete", "LichThucHanh")/' + id, {
-                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                }, function(response) {
-                    location.reload();
-                }).fail(function() {
-                    alert('Có lỗi xảy ra khi xóa lịch');
-                });
-            }
+        function exportSchedule() {
+            toastr.info('Đang chuẩn bị xuất lịch...');
+            window.location.href = '@Url.Action("ExportSchedule", "LichThucHanh")';
         }
 
-        // Initialize calendar mini
         $(document).ready(function() {
-            // Simple calendar display
-            var today = new Date();
-            var currentMonth = today.getMonth();
-            var currentYear = today.getFullYear();
-
-            displayCalendar(currentMonth, currentYear);
-
-            function displayCalendar(month, year) {
-                var firstDay = new Date(year, month, 1).getDay();
-                var daysInMonth = new Date(year, month + 1, 0).getDate();
-
-                var monthNames = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
-                    "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
-
-                var calendarHtml = '<div class="text-center mb-3"><h6>' + monthNames[month] + ' ' + year + '</h6></div>';
-                calendarHtml += '<div class="row text-center"><div class="col">CN</div><div class="col">T2</div><div class="col">T3</div><div class="col">T4</div><div class="col">T5</div><div class="col">T6</div><div class="col">T7</div></div>';
-
-                // Add calendar days here (simplified)
-                var dayCount = 1;
-                for (var week = 0; week < 6; week++) {
-                    calendarHtml += '<div class="row text-center">';
-                    for (var day = 0; day < 7; day++) {
-                        if (week === 0 && day < firstDay) {
-                            calendarHtml += '<div class="col p-1"></div>';
-                        } else if (dayCount > daysInMonth) {
-                            calendarHtml += '<div class="col p-1"></div>';
-                        } else {
-                            var isToday = dayCount === today.getDate() && month === today.getMonth() && year === today.getFullYear();
-                            var dayClass = isToday ? 'bg-primary text-white rounded' : '';
-                            calendarHtml += '<div class="col p-1"><span class="' + dayClass + '">' + dayCount + '</span></div>';
-                            dayCount++;
-                        }
-                    }
-                    calendarHtml += '</div>';
-                    if (dayCount > daysInMonth) break;
-                }
-
-                $('#calendar-mini').html(calendarHtml);
-            }
-
             // Initialize tooltips
             $('[title]').tooltip();
+
+            // Auto-refresh every 5 minutes
+            setInterval(function() {
+                // Could implement auto-refresh of data here
+            }, 300000);
+
+            // Highlight today's schedules
+            var today = moment().format('YYYY-MM-DD');
+            $('#scheduleTable tbody tr').each(function() {
+                if ($(this).data('time') === today) {
+                    $(this).addClass('table-warning');
+                }
+            });
         });
     </script>
 }
