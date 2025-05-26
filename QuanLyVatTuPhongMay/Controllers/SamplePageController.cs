@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Cuba_Staterkit.Controllers
+namespace QuanLyVatTuPhongMay.Controllers
 {
     public class SamplePageController : Controller
     {
